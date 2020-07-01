@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateAdminPayout extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('admin_payout', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->integer('supplier_id')->unsigned()->nullable();
+            $table->string('payment_ids')->nullable();
+            $table->string('comment')->nullable();
+            $table->boolean('status')->unsigned()->nullable()->default(0);
+            $table->string('date')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('admin_payout');
+    }
+}

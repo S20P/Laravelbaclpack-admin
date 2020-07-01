@@ -1,0 +1,45 @@
+.profile-tab .file-upload {
+	color: #fff;
+}
+
+.account-input .common-btn i {
+	font-size: 16px;
+}
+
+.form-control:focus {
+	color: #fff;
+	background-color: transparent;
+	border-color: none;
+	outline: 0;
+	box-shadow: none;
+}
+
+.customer_PaymentStripe input[type=number]:focus,.message_account_reply:focus {
+	color: #000;
+}
+
+.account-nav {
+	display: flex;
+	flex-direction: inherit!important;
+	flex-wrap: wrap;
+	align-items: baseline;
+}
+
+.account-nav .common-btn {
+	margin-left: 20px;
+}
+
+#add_slide_btn{
+    padding: 15px;
+	margin: 15px 0px;
+}
+
+#service-slider-list{
+	background-color: #fff;
+	background: #fff;
+	padding: 15px;
+}
+
+#upload_image_label {
+    display: contents;
+}

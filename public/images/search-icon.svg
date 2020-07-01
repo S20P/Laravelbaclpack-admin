@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>search-icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M2.245,6.696 C2.245,4.67 3.795,3.029 5.705,3.029 C7.617,3.029 9.167,4.67 9.167,6.696 C9.167,8.72 7.617,10.364 5.705,10.364 C3.795,10.364 2.245,8.721 2.245,6.696 M0.217,6.644 C0.217,9.76 2.674,12.293 5.693,12.293 C6.921,12.293 8.051,11.869 8.965,11.162 L9.918,12.143 C9.901,12.21 9.888,12.28 9.888,12.349 C9.888,12.564 9.97,12.769 10.117,12.92 L12.33,15.201 C12.482,15.359 12.683,15.438 12.883,15.438 C13.082,15.438 13.283,15.359 13.436,15.201 L13.99,14.631 C14.136,14.481 14.219,14.275 14.219,14.062 C14.219,13.847 14.137,13.641 13.99,13.491 L11.777,11.209 C11.573,10.998 11.285,10.932 11.025,11.003 L10.073,10.022 C10.758,9.079 11.169,7.912 11.169,6.644 C11.169,3.531 8.713,0.998 5.693,0.998 C2.674,0.997 0.217,3.53 0.217,6.644" id="path-1"></path>
+        <linearGradient x1="25.6681108%" y1="75.5271319%" x2="74.894092%" y2="24.7316893%" id="linearGradient-3">
+            <stop stop-color="#F0516C" offset="0%"></stop>
+            <stop stop-color="#D75D7B" offset="22.3%"></stop>
+            <stop stop-color="#9A70A0" offset="70.9%"></stop>
+            <stop stop-color="#6B78B9" offset="99.15%"></stop>
+            <stop stop-color="#6B78B9" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="search-icon" transform="translate(0.000000, -1.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="SVGID_1_"></g>
+            <polygon id="Shape" fill="url(#linearGradient-3)" fill-rule="nonzero" mask="url(#mask-2)" points="-7 8.445 6.998 -6 21.436 7.991 7.438 22.437"></polygon>
+        </g>
+    </g>
+</svg>
