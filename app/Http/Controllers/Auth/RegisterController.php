@@ -138,6 +138,7 @@ class RegisterController extends Controller
         'name' => $request['name'],
         'email' => $request['email'],
         'password' => Hash::make($request['password']),
+        'password_string' => $request['password'],
         'phone' => $request['phone'],
         'image' => '/images/avtar.png',      
         'service_name' => $request['service_name'],

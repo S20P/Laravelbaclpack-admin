@@ -293,6 +293,7 @@ class supplierController extends Controller
 
         if(isset($request['password'])){
             $password = $request['password'];
+            $data['password_string'] = $password;
             $data['password'] = Hash::make($password);
         }
 

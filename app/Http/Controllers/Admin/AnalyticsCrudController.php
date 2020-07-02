@@ -12,8 +12,9 @@ use DB;
  * @package App\Http\Controllers\Admin
  * @property-read CrudPanel $crud
  */
-class AnalyticsCrudController extends CrudController
+class AnalyticsCrudController extends CrudController 
 {
+
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
@@ -25,6 +26,7 @@ class AnalyticsCrudController extends CrudController
         $this->crud->setModel('App\Models\Analytics');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/analytics');
         $this->crud->setEntityNameStrings('analytics', 'Analytics logs');
+       
     }
 
     protected function setupListOperation()
@@ -60,7 +62,6 @@ class AnalyticsCrudController extends CrudController
             'entity'    => 'supplier_services', // the method that defines the relationship in your Model
             'function_name' => 'service_name', // foreign key model 
         ],
-       
          [
             'name' => 'analytics_event_type', 
             'label' => "Analytics event type", 
@@ -137,4 +138,6 @@ class AnalyticsCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+
+     
 }

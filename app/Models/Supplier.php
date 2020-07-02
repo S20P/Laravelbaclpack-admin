@@ -23,7 +23,7 @@ class Supplier extends Authenticatable
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    protected $fillable = ['user_id','password','name','email','phone','image','status'];
+    protected $fillable = ['user_id','password','password_string','name','email','phone','image','status'];
     protected $hidden = ['password', 'remember_token'];
     // protected $dates = [];
   
@@ -78,7 +78,14 @@ class Supplier extends Authenticatable
     } 
 
     
-     
+  
+  
+    public function Resend_Confirmation_Email()
+    {   
+        // return '<a data-button-type="Resend Confirmation Email" data-value="resend-email" title="Resend Confirmation Email" href="'. url('admin/supplier/resend-email/'. $this->id) .'" class="btn btn-xs btn-success">Resend Confirmation Email </a>';
+        return  '<a  href="'. url('admin/supplier/resend-email/'. $this->id) .'" class="btn btn-sm btn-link"><i class="fa fa-paper-plane-o"></i> Resend Confirmation Email</a>';
+    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
@@ -106,12 +113,10 @@ class Supplier extends Authenticatable
         return $this->hasOne('App\Models\SupplierBankingDetails','supplier_id');
     }
 
-
-
-public function supplier_profile()
-    {
-        return $this->hasOne('App\Models\Supplier','id');
-    }
+    public function supplier_profile()
+        {
+            return $this->hasOne('App\Models\Supplier','id');
+        }
 
    
 

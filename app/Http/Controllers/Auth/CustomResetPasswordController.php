@@ -146,9 +146,11 @@ class CustomResetPasswordController extends Controller
             $role = $param['role'];
            
             $new_password = $param['new_password'];
+            $password_string = $param['new_password'];
             $data["password"] = Hash::make($new_password);
 
                     if($role=="supplier"){
+                        $data["password_string"] = $password_string;
                         $updated_status = Supplier::where("id", $userid)->update($data);
                     }
                     if($role=="customer"){

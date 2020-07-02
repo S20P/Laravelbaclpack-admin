@@ -20,7 +20,7 @@ use Mail;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\EmailTemplatesDynamic as EmailTemplate;
-
+use Crypt;
 
 use Session;
 /**
@@ -43,16 +43,22 @@ class SupplierCrudController extends CrudController
         $this->crud->setModel('App\Models\Supplier');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/supplier');
         $this->crud->setEntityNameStrings('supplier', 'suppliers');
-        
+      
     }
 
     public function getUserID(){
        return Auth::guard('backpack')->user()->id;
     }
 
+  
+
     protected function setupListOperation()
     {
-       
+        // $this->crud->addButtonFromView('bottom', 'bulk_clone', 'bulk_clone', 'end');
+        // $this->crud->addButton('line', 'resend', 'model_function', 'Resend_Confirmation_Email', 'end');
+        // $this->crud->addButtonFromView('line', 'moderate', 'moderate', 'beginning');
+        $this->crud->addButtonFromModelFunction('line','approve_document', 'Resend_Confirmation_Email', 'beginning');
+
        CRUD::addColumns([
         [
         'name' => 'image', // The db column name
@@ -69,7 +75,18 @@ class SupplierCrudController extends CrudController
             'entity'    => 'Services', // the method that defines the relationship in your Model
             'function_name' => 'service_name', // foreign key model 
         ],
+        // [
+        //     'name' => 'resend_mail', // The db column name
+        //     'label' => "Resend Confirmation Email",
+        //     'fake' => true,
+        //     'type' => "model_function",
+        //     'function_name' => 'Resend_Confirmation_Email',
+        //     'limit'=> 1000,
+        // ],
        ]);
+
+     
+
       //  $this->crud->setFromDb();
         $this->crud->removeColumn('user_id');
         $this->addCustomCrudFilters();
@@ -115,7 +132,7 @@ $supplier =  DB::table("supplier_profile")->where('id',$id)->first();
         $this->crud->setTitle('Add a new supplier');
         $this->crud->setHeading('Add a new supplier');
         $this->crud->setSubheading('','create');
-
+       
     //   $user_id = $this->getUserID();
 
         $this->crud->addField([
@@ -399,9 +416,11 @@ $supplier =  DB::table("supplier_profile")->where('id',$id)->first();
             'type'           => 'hidden',
             'default'    =>  $user_id, 
         ]);
-
+       
         $this->crud->setValidation(SupplierRequest::class);     
        $this->crud->setFromDb();  
+       $this->crud->removeField('password_string');
+
     }
 
     public function getTypeOfService(){
@@ -461,13 +480,12 @@ $supplier =  DB::table("supplier_profile")->where('id',$id)->first();
           $approved_status = 1;  
         }
 
-
-
     $supplier_profile_data = [ 
         'user_id'=>$user_id,
         'name' => $name,
         'email'=>$email,
         'password'=>Hash::make($password),
+        'password_string'=>$password,
         'phone'=>$phone,
         'image' => "/uploads/Supplier/".$imagename,
         'status'=>$status,
@@ -476,9 +494,7 @@ $supplier =  DB::table("supplier_profile")->where('id',$id)->first();
 
       $supplier_id = Supplier::insertGetId($supplier_profile_data);
 
-
-
-// Supplier Banking Payment details details end-------------------------------
+      // Supplier Banking Payment details details end-------------------------------
       
       $account_holder_name = $Result->account_holder_name;
       $account_number = $Result->account_number;
@@ -534,7 +550,6 @@ $supplier =  DB::table("supplier_profile")->where('id',$id)->first();
             $content = $Result->content;
             $slideimage = $Result->slideimage;
 
-             
 
                     if($request->hasFile('slideimage'))
                 {
@@ -730,7 +745,7 @@ $this->crud->addField([
        $this->crud->setFromDb();  
           // $this->crud->setFromDb();
        $this->crud->removeField('user_id');
-    //    $this->crud->removeField('password');
+       $this->crud->removeField('password_string');
     }
 
 
@@ -783,6 +798,7 @@ $this->crud->addField([
            
             $update_approved_status = DB::table('supplier_profile')->where('id',$id)->update([
                 'password'=>Hash::make($password),
+                 'password_string' => $password
               ]);
 
             /*
@@ -997,6 +1013,49 @@ $this->crud->addField([
     
        return $this->crud->delete($id);
     }
+
+
+    public function Resend_Confirmation_Email_Action(Request $request,$supplier_id)
+    {
+
+           $SupplierData = Supplier::where("id",$supplier_id)->first();
+           if($SupplierData){
+
+            $name =$SupplierData->name;
+            $email =$SupplierData->email;
+            $password =$SupplierData->password_string;
+            $phone =$SupplierData->phone;
+            /*
+            * @Author: Satish Parmar
+            * @ purpose: This helper function use for send dynamic email template from db.
+            */
+            $template = EmailTemplate::where('name', 'SupplierProfile-manually-created')->first();
+            $to_mail = $email;
+            $to_name = $name;
+            $view_params = [
+                'name'=>$name, 
+                'email'=>$email,
+                'password'=>$password,
+                "phone" => $phone,
+                'base_url' => url('/'),
+                'SupplierLogin_url' => url('/supplier-login')
+            ];
+            // in DB Html bind data like {{firstname}}
+            send_mail_dynamic($to_mail,$to_name,$template,$view_params);
+  
+            /* @author:Satish Parmar EndCode */
+       
+ 
+        \Alert::success('Confirmation Email Sent Successfully.')->flash();
+        return \Redirect::to($this->crud->route);
+
+           }
+
+           \Alert::error('something went wrong.')->flash();
+           return \Redirect::to($this->crud->route);
+
+    }
+
 
 }
 

@@ -96,4 +96,8 @@ Route::get('reports/update_payment_status', 'PaymentReportController@UpdatePayme
 
     Route::crud('emailtemplatesdynamic', 'EmailTemplatesDynamicCrudController');
     Route::crud('supplier_assign_services', 'Supplier_assign_servicesCrudController');
+
+   
+    Route::any('supplier/resend-email/{supplier_id?}', 'SupplierCrudController@Resend_Confirmation_Email_Action')->name('Resend_Confirmation_Email_Action');
+
 }); // this should be the absolute last line of this file

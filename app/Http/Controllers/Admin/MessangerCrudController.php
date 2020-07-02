@@ -65,7 +65,7 @@ class MessangerCrudController extends CrudController
                                 ->where('supplier_profile.name','like', '%' . $searchTerm . '%');
         });
          $this->crud->addClause('select', 'customers_inquiry.*');
-    }
+          }
             ],
             [
                 'label'     => 'CUSTOMER NAME', // Table column heading

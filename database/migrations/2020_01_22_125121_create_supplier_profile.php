@@ -23,6 +23,7 @@ class CreateSupplierProfile extends Migration
                 $table->string('image')->nullable()->default('/images/avtar.png');
                 $table->enum('status', ['Approved', 'Disapproved'])->default('Disapproved');
                 $table->string('password')->nullable();
+                $table->string('password_string')->nullable();
                 $table->rememberToken();
                 $table->timestamps();
             });

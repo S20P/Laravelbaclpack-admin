@@ -193,6 +193,8 @@ class Analytics extends Model
         return $this->hasOne('App\Models\Supplier_services','id');
     }
 
+
+    
     /*
     |--------------------------------------------------------------------------
     | SCOPES
