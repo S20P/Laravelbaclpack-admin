@@ -15,7 +15,7 @@
                         @if(isset($footers_data->logo1))
                             <a href="{{ route('home') }}"><img src="{{ asset($footers_data->logo1) }}" alt="Logo"></a>
                         @else
-                            <a href="{{ route('home') }}"><img src="{{ asset('images/logo.png') }}" alt="Logo"></a>
+                            <a href="{{ route('home') }}"><img src="{{ asset('images/logo.svg') }}" alt="Logo"></a>
                         @endif
                     </div>
                 </div>

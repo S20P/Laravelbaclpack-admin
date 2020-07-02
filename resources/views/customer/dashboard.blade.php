@@ -110,7 +110,7 @@
                                  <div class="modal-body">
                                     <div class="sidebar-block">
                                        <div class="title-block">
-                                          <h2>Confirm Delete</h2><a class="modal-close" data-dismiss="modal"><img src="http://54.67.115.172/laravelbackpack/images/modal-close.svg "></a>
+                                          <h2>Confirm Delete</h2><a class="modal-close" data-dismiss="modal"><img width="15px" src="{{ asset('images/modal-close.svg')}}"></a>
                                        </div>
                                        <p>Are you sure want to delete booking?</p>
                                           <p>Do you want to proceed?</p>
@@ -273,7 +273,7 @@
                                         <div class="modal-body">
                                             <div class="sidebar-block">
                                                 <div class="title-block">
-                                                    <h2>Confirm Delete</h2><a class="modal-close" data-dismiss="modal"><img src="http://54.67.115.172/laravelbackpack/images/modal-close.svg "></a>
+                                                    <h2>Confirm Delete</h2><a class="modal-close" data-dismiss="modal"><img width="15px" src="{{ asset('images/modal-close.svg')}}"></a>
                                                 </div>
                                                 <p>Are you sure want to remove from wishlist?</p>
                                                 <p>Do you want to proceed?</p>

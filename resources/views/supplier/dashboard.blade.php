@@ -166,7 +166,7 @@
                   <div class="modal-body">
                      <div class="sidebar-block">
                         <div class="title-block">
-                           <h2>Add</h2><a class="modal-close" data-dismiss="modal"><img src="{{ asset('images/modal-close.svg')}}"></a>
+                           <h2>Add</h2><a class="modal-close" data-dismiss="modal"><img width="15px" src="{{ asset('images/modal-close.svg')}}"></a>
                         </div>
                <!-----------------------------------------------------------------------------------------------------------------
                                                       Booking add Form 
@@ -665,7 +665,7 @@
                                                   <div class="modal-body">
                                                      <div class="sidebar-block">
                                                         <div class="title-block">
-                                                           <h2>Invoice</h2><a class="modal-close" data-dismiss="modal"><img src="{{ asset('images/modal-close.svg')}}"></a>
+                                                           <h2>Invoice</h2><a class="modal-close" data-dismiss="modal"><img  width="15px" src="{{ asset('images/modal-close.svg')}}"></a>
                                                         </div>
                <!-----------------------------------------------------------------------------------------------------------------
                                                       Send Invoice Form 
@@ -724,7 +724,7 @@
                   <div class="modal-body">
                      <div class="sidebar-block">
                         <div class="title-block">
-                           <h2>Edit</h2><a class="modal-close" data-dismiss="modal"><img src="{{ asset('images/modal-close.svg')}}"></a>
+                           <h2>Edit</h2><a class="modal-close" data-dismiss="modal"><img width="15px" src="{{ asset('images/modal-close.svg')}}"></a>
                         </div>
 
                <!-----------------------------------------------------------------------------------------------------------------
@@ -791,7 +791,7 @@
                   <div class="modal-body">
                      <div class="sidebar-block">
                         <div class="title-block">
-                           <h2>Confirm Delete</h2><a class="modal-close" data-dismiss="modal"><img src="{{ asset('images/modal-close.svg')}}"></a>
+                           <h2>Confirm Delete</h2><a class="modal-close" data-dismiss="modal"><img width="15px" src="{{ asset('images/modal-close.svg')}}"></a>
                         </div>
                         <p>You are about to delete one track, this procedure is irreversible.</p>
                            <p>Do you want to proceed?</p>
@@ -821,7 +821,7 @@
                   <div class="modal-body">
                      <div class="sidebar-block">
                         <div class="title-block">
-                           <h2>Edit</h2><a class="modal-close" data-dismiss="modal"><img src="{{ asset('images/modal-close.svg')}}"></a>
+                           <h2>Edit</h2><a class="modal-close" data-dismiss="modal"><img width="15px" src="{{ asset('images/modal-close.svg')}}"></a>
                         </div>
 
                <!-----------------------------------------------------------------------------------------------------------------
@@ -935,7 +935,7 @@
                   <div class="modal-body">
                      <div class="sidebar-block">
                         <div class="title-block">
-                           <h2>Confirm Delete</h2><a class="modal-close" data-dismiss="modal"><img src="{{ asset('images/modal-close.svg')}}"></a>
+                           <h2>Confirm Delete</h2><a class="modal-close" data-dismiss="modal"><img width="15px" src="{{ asset('images/modal-close.svg')}}"></a>
                         </div>
                         <p>You are about to delete one track, this procedure is irreversible.</p>
                            <p>Do you want to proceed?</p>
