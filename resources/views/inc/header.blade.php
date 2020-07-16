@@ -23,12 +23,14 @@
                 <div class="main_menu">
                     <nav>
                         <ul>
+                        @if(!Auth::guard('supplier')->user())
                                 <li>
                                     <a class="browse_suppliers" href="{{ route('BrowseSuppliers') }}">BROWSE SUPPLIER</a>
                                 </li>
                                 <li>
                                     <a class="becomesupplier" href="{{ route('BecomeSupplier') }}">BECOME A SUPPLIER</a>
                                 </li>
+                                @endif
                                 <li>
                                     <a class="help_page" href="{{ route('Help') }}">HELP</a>
                                 </li>
@@ -72,8 +74,11 @@
                                      <i class="fal fa-times"></i>              
                             </div>
                             <ul>
+                            @if(!Auth::guard('supplier')->user())
                                 <li><a class="browse_suppliers" href="{{ route('BrowseSuppliers') }}">BROWSE SUPPLIERS</a></li>
                                 <li><a class="becomesupplier" href="{{ route('BecomeSupplier') }}">BECOME A SUPPLIER</a></li>
+                                @endif
+
                                 <li><a class="our_story" href="{{ route('OurStory') }}">OUR STORY</a></li>
                                 <li><a class="our_suppliers" href="{{route('OurSuppliers')}}">BOOK AN EVENT</a></li>
                                 <li><a class="contact_us" href="{{route('Contacts')}}">CONTACTS</a></li>
@@ -106,15 +111,15 @@
                             </ul>
                             <div class="menu-nav-link">
                                 <ul>
-                                    <li>
+                                    <!-- <li>
                                         <a class="help_page" href="{{ route('Help') }}">USER T&C</a>
-                                    </li>
+                                    </li> -->
                                     <li>
                                         <a class="tak_care_page" href="{{ route('SupplierTackandCare') }}">SUPPLIER T&C</a>
                                     </li>
-                                    <li>
+                                    <!-- <li>
                                         <a class="help_page"  href="{{ route('Help') }}">T&C</a>
-                                    </li>
+                                    </li> -->
 {{--                                    <li>--}}
 {{--                                        <a href="">PRIVACY POLICY </a>--}}
 {{--                                    </li>--}}

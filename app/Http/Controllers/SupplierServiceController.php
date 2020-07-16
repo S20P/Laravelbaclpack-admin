@@ -29,9 +29,9 @@ class SupplierServiceController extends Controller
        $Result =  DB::table("supplier_services")
         ->where('supplier_services.supplier_id',$supplier_id)
         ->join('services', 'services.id', '=', 'supplier_services.service_id')
-        ->join('supplier_assign_events', 'supplier_services.id', '=', 'supplier_assign_events.supplier_services_id')                                        
-        ->join('events', 'supplier_assign_events.event_id', '=', 'events.id')
-        ->select('services.name as service_name','events.name as event_name','supplier_services.*')
+      //   ->join('supplier_assign_events', 'supplier_services.id', '=', 'supplier_assign_events.supplier_services_id')                                        
+      //   ->join('events', 'supplier_assign_events.event_id', '=', 'events.id')
+        ->select('services.name as service_name','supplier_services.*')
         ->get();   
 
         
@@ -56,6 +56,18 @@ class SupplierServiceController extends Controller
                if($Result[$j]->price_range==3){
                   $Result[$j]->price_range = "High";
                }
+
+               $events_list = [];
+               $supplier_services_id =  $Result[$j]->id;
+               $events  =  DB::table('supplier_assign_events')
+                          ->join('events', 'supplier_assign_events.event_id', '=', 'events.id')
+                          ->select('events.name as event_name')
+                          ->where('supplier_assign_events.supplier_services_id',$supplier_services_id)
+                          ->get();
+                 $events  =   $events->pluck('event_name');            
+                 array_push($events_list,$events);
+              
+                $Result[$j]->events = $events_list;
          }
         }
       

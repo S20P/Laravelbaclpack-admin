@@ -1,11 +1,13 @@
  <!-- Meta Tags -->
  
-<meta charset="utf-8">
+ <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no user-scalable=no,  maximum-scale=1.0, minimum-scale=1.0" >
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="description" content="">
+{!! MetaTag::tag('title') !!}
+{!! MetaTag::tag('description') !!}
 <meta name="author" content="">
  <!-- CSRF Token -->
+ 
  <meta name="csrf-token" content="{{ csrf_token() }}">
  <script src="https://apis.google.com/js/api:client.js"></script>
  <!-- <title>Home | Party Perfect</title> -->
@@ -37,7 +39,7 @@
 
 <link rel="stylesheet" href="{{ asset('css/jquery.toast.css') }}" rel="stylesheet">
 <!-- Smartsupp Live Chat script -->
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 var _smartsupp = _smartsupp || {};
 _smartsupp.key = '9e578857797049d5ca9df51fa43ee686b9039775';
 window.smartsupp||(function(d) {
@@ -46,7 +48,18 @@ window.smartsupp||(function(d) {
   c.type='text/javascript';c.charset='utf-8';c.async=true;
   c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
 })(document);
+</script> -->
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154734882-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154734882-1');
 </script>
+
 
   
   

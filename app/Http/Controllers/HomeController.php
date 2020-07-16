@@ -33,6 +33,9 @@ use Session;
 use Mail;
 use Response;
 use App\Mail\TestEmail;
+use MetaTag;
+use PDF;
+
 
 use App\Models\EmailTemplatesDynamic as EmailTemplate;
 
@@ -92,18 +95,22 @@ class HomeController extends Controller
         $getserviceid =  Services::select('id','name')->Where([['id','=', ''.$request->service_name.'']])->first();
         $geteventid = Events::select('id','name')->Where([['id','=', ''.$request->event_name.'']])->first();
         $query  = DB::table('supplier_services')
-                            ->join('supplier_assign_events', 'supplier_services.id', '=', 'supplier_assign_events.supplier_services_id')
+                            
                             ->join('supplier_profile', 'supplier_services.supplier_id', '=', 'supplier_profile.id')
                             ->leftJoin('location', 'supplier_services.location', '=', 'location.id')
                             ->join('services', 'supplier_services.service_id', '=', 'services.id')
-                            ->join('events', 'supplier_assign_events.event_id', '=', 'events.id')
                             ->where('supplier_services.status','Active')
                             ->where('supplier_profile.status','Approved')
-                            ->select('supplier_services.price_range','supplier_services.supplier_id as spid','supplier_profile.name as supplier_name','supplier_services.business_name','supplier_services.service_description','supplier_services.location','events.name as event_name','location.location_name as location_name','supplier_profile.image','services.name as service_name','services.price as service_price','supplier_services.service_id','supplier_services.id as ssid');
+                           ->groupby('supplier_id')
+                           ->groupBy('service_id')
+
+                            ->select('supplier_services.price_range','supplier_services.supplier_id as spid','supplier_profile.name as supplier_name','supplier_services.business_name','supplier_services.service_description','supplier_services.location','location.location_name as location_name','supplier_profile.image','services.name as service_name','services.price as service_price','supplier_services.service_id','supplier_services.id as ssid');
         if($request->service_name != ""){
             $query->Where([['supplier_services.service_id','=', ''.$request->service_name.'']]);
         }
         if($request->event_name != ""){
+            $query->join('supplier_assign_events', 'supplier_services.id', '=', 'supplier_assign_events.supplier_services_id');
+            $query->join('events', 'supplier_assign_events.event_id', '=', 'events.id');
             $query->Where([['events.id','=', ''.$request->event_name.'']]);
         }
         if($request->location != ""){
@@ -114,6 +121,18 @@ class HomeController extends Controller
         }
 //    dd($this->per_page);
         $vendors = $query->paginate($this->per_page);
+
+        foreach ($vendors as $key => $value) {
+
+          $supplier_services_id =  $value->ssid;
+          $events  =  DB::table('supplier_assign_events')
+                     ->join('events', 'supplier_assign_events.event_id', '=', 'events.id')
+                     ->select('events.name as event_name')
+                     ->where('supplier_assign_events.supplier_services_id',$supplier_services_id)
+                     ->get();
+            $vendors[$key]->events = $events;
+         }
+
         $vendors->appends(request()->input())->links();
 
         // dd($vendors);
@@ -131,19 +150,32 @@ class HomeController extends Controller
         $serviceid = Services::select('id')->where('slug',$slug)->first();
         // $data = SupplierAssignCategoryEvent::with('getSupAssCatRelation')->where([['event_id',$id]])->get();
         $vendors = DB::table('supplier_services')
-                            ->join('supplier_assign_events', 'supplier_services.id', '=', 'supplier_assign_events.supplier_services_id')
+                           // ->join('supplier_assign_events', 'supplier_services.id', '=', 'supplier_assign_events.supplier_services_id')
                             ->join('supplier_profile', 'supplier_services.supplier_id', '=', 'supplier_profile.id')
                             ->leftJoin('location', 'supplier_services.location', '=', 'location.id')
                             ->join('services', 'supplier_services.service_id', '=', 'services.id')
-                            ->join('events', 'supplier_assign_events.event_id', '=', 'events.id')
-                            ->select('supplier_services.price_range','supplier_services.supplier_id as spid','supplier_profile.name as supplier_name','supplier_services.business_name','supplier_services.service_description','supplier_services.location','events.name as event_name','location.location_name as location_name','supplier_profile.image','services.name as service_name','services.price as service_price','supplier_services.service_id','supplier_services.id as ssid')
+                            ->select('supplier_services.price_range','supplier_services.supplier_id as spid','supplier_profile.name as supplier_name','supplier_services.business_name','supplier_services.service_description','supplier_services.location','location.location_name as location_name','supplier_profile.image','services.name as service_name','services.price as service_price','supplier_services.service_id','supplier_services.id as ssid')
                             ->where([['supplier_services.service_id',$serviceid->id]])
                             ->where('supplier_services.status','Active')
                             ->where('supplier_profile.status','Approved')
-                            ->paginate($this->per_page);
+                            ->groupby('supplier_id')
+                            ->groupBy('service_id')
+                             ->paginate($this->per_page);
 
         // $featuredvendors = $this->getFutureVendors();
         $filters =  $this->getFilters();
+
+        foreach ($vendors as $key => $value) {
+
+            $supplier_services_id =  $value->ssid;
+            $events  =  DB::table('supplier_assign_events')
+                       ->join('events', 'supplier_assign_events.event_id', '=', 'events.id')
+                       ->select('events.name as event_name')
+                       ->where('supplier_assign_events.supplier_services_id',$supplier_services_id)
+                       ->get();
+              $vendors[$key]->events = $events;
+           }
+
 
         return view('FrontEnd.pages.OurSuppliers')->with(['supplierstlistbanner'=>$supplierstlistbanner,'vendors'=> $vendors,'service'=> $serviceid,'filters'=>$filters,'user_id'=>$user_id]);
     }
@@ -156,7 +188,7 @@ class HomeController extends Controller
             $vendors = Supplier_services::join('supplier_profile', 'supplier_services.supplier_id', '=', 'supplier_profile.id')
                                         ->join('services', 'supplier_services.service_id', '=', 'services.id')
                                         ->where([['supplier_services.id',$supplier_service_id]])
-                                        ->select('supplier_services.price_range','supplier_services.supplier_id as supplier_id','supplier_profile.name as supplier_name','supplier_services.business_name','supplier_services.service_description','supplier_services.location','services.name as service_name','services.price as service_price','supplier_services.service_id','supplier_services.id as supplier_service_id',
+                                        ->select('supplier_services.price_range','supplier_services.supplier_id as supplier_id','supplier_profile.name as supplier_name','supplier_profile.image as company_image','supplier_services.business_name','supplier_services.service_description','supplier_services.location','services.name as service_name','services.price as service_price','supplier_services.service_id','supplier_services.id as supplier_service_id',
                                             'supplier_services.facebook_title','supplier_services.facebook_link','supplier_services.instagram_title','supplier_services.instagram_link','supplier_profile.email','supplier_profile.phone')
                                         ->first();
             if($vendors != ''){
@@ -217,6 +249,10 @@ class HomeController extends Controller
     public function becomeSupplierSignupform(Request $request){
         $becomeSupplierbanner = SliderModule::select('content','image')->where('slug','becomeSupplier_page_banner')->first();
         $pagecontent = pages::where('slug','become_supplier_page')->first();
+        $meta_title = $pagecontent->meta_title;
+        $meta_description = $pagecontent->meta_description;
+        MetaTag::set('title', $meta_title);
+        MetaTag::set('description', $meta_description);
         $getLocations = Location::get();
         $events =  Events::orderBy('name', 'ASC')->get();
         $services = Services::orderBy('name', 'ASC')->get();
@@ -314,15 +350,26 @@ class HomeController extends Controller
         }
         if(isset($booking_id) && $booking_id != ''){
             $request->session()->put('b_id', $booking_id);
-            $booking  = DB::table("booking")
-                ->join('services', 'services.id', '=', 'booking.service_id')
-                ->join('supplier_services', 'booking.supplier_services_id', '=', 'supplier_services.id')
-                ->join('events', 'booking.event_id', '=', 'events.id')
-                ->join('supplier_profile', 'booking.supplier_id', '=', 'supplier_profile.id')
-                ->join('customer_profile', 'booking.customer_id', '=', 'customer_profile.id')
-                ->where('booking.id',base64_decode($booking_id))
-                ->select('booking.id as booking_id','services.name as service_name','supplier_profile.name as sname','customer_profile.name as cname','supplier_profile.*','booking.*','events.name as event_name','supplier_services.*','booking.status as booking_status')
+            // $booking  = DB::table("booking")
+            //     ->join('services', 'services.id', '=', 'booking.service_id')
+            //     ->join('supplier_services', 'booking.supplier_services_id', '=', 'supplier_services.id')
+            //     ->join('events', 'booking.event_id', '=', 'events.id')
+            //     ->join('supplier_profile', 'booking.supplier_id', '=', 'supplier_profile.id')
+            //     ->join('customer_profile', 'booking.customer_id', '=', 'customer_profile.id')
+            //     ->where('booking.id',base64_decode($booking_id))
+            //     ->select('booking.id as booking_id','services.name as service_name','supplier_profile.name as sname','customer_profile.name as cname','supplier_profile.*','booking.*','events.name as event_name','supplier_services.*','booking.status as booking_status')
+            // ->first();
+
+            $booking =  DB::table('supplier_services')
+            ->join('supplier_profile', 'supplier_services.supplier_id', '=', 'supplier_profile.id')
+            ->join('booking', 'supplier_services.id', '=', 'booking.supplier_services_id')
+            ->join('events', 'booking.event_id', '=', 'events.id')
+            ->join('services', 'supplier_services.service_id', '=', 'services.id')
+            ->join('customer_profile', 'booking.customer_id', '=', 'customer_profile.id')
+            ->where('booking.id',base64_decode($booking_id))
+            ->select('booking.id as booking_id','services.name as service_name','supplier_profile.name as sname','customer_profile.name as cname','supplier_profile.*','booking.*','events.name as event_name','supplier_services.*','supplier_profile.id as supplier_id','booking.status as booking_status')
             ->first();
+
         }
 //        dd($booking);
          return view('customer.invoice')->with(['booking'=> $booking,'user_id'=>$user_id]);
@@ -403,6 +450,10 @@ class HomeController extends Controller
         }
         $faqs = $faqs->get()->toArray();
         $pagecontent = pages::where('slug','faqs_page')->first();
+        $meta_title = $pagecontent->meta_title;
+        $meta_description = $pagecontent->meta_description;
+        MetaTag::set('title', $meta_title);
+        MetaTag::set('description', $meta_description);
         $faqabanner = SliderModule::select('content','image')->where('slug','faq_page_banner')->first();
         return view('FrontEnd.pages.Faq')->with(['faqs'=>$faqs,'faqabanner'=>$faqabanner,'filter'=>$request->search_keyword,'pagecontent'=>$pagecontent]);
     }
@@ -416,9 +467,14 @@ class HomeController extends Controller
         $helps = $helps->get()->toArray();
         $pagecontent = pages::where('slug','help_page')->first();
         $helpsbanner = SliderModule::select('content','image')->where('slug','help_page_banner')->first();
+
+        $meta_title = $pagecontent->meta_title;
+        $meta_description = $pagecontent->meta_description;
+        MetaTag::set('title', $meta_title);
+        MetaTag::set('description', $meta_description);
+
         return view('FrontEnd.pages.Help')->with(['helps'=>$helps,'helpsbanner'=>$helpsbanner,'filter'=>$request->search_keyword,'pagecontent'=>$pagecontent]);
     }
-
 
    public function getHelpsAjex(Request $request){
         $filter = [];
@@ -491,6 +547,10 @@ return Response($output);
     public function supplierTakeAndCare(){
         $takeandcarebanner = SliderModule::select('content','image')->where('slug','supplier-take-and-care')->first();
         $pagecontent = pages::where('slug','supplier-take-and-care')->first();
+        $meta_title = $pagecontent->meta_title;
+        $meta_description = $pagecontent->meta_description;
+        MetaTag::set('title', $meta_title);
+        MetaTag::set('description', $meta_description);
         return view('FrontEnd.pages.SupplierTackandCare')->with(['takeandcarebanner'=>$takeandcarebanner,'pagecontent'=>$pagecontent]);
     }
 
@@ -537,8 +597,6 @@ return Response($output);
         }
     }
 
-
-
     public function locations(Request $request){
         $getLocations = Location::get();
         return $getLocations;
@@ -554,6 +612,8 @@ return Response($output);
 
        echo "TEST Function Called";
 
+
+       return;
        $template = EmailTemplate::where('name', 'welcome-email')->first();
        $to_mail = "armorier@spumartes.tk";
        $to_name = "MY Dyanmic Name";
@@ -585,8 +645,174 @@ return Response($output);
     }
     //  @author:Satish Parmar EndCode
 
+    
+    public function customer_email_list(Request $request){
+        $customer_emails = Customer::select('email')->get()->toArray();
+        return Response::json(["customer_emails"=>$customer_emails]); 
+    }
+
+    public function ExportAllSupplierCSV(Request $request){
+
+        $FileName = asset("data/cfdb7-2020-07-07.csv");
+
+        $file = public_path('data/cfdb7-2020-07-07.csv');
+
+        $dataArr = $this->csvToArray($file);
+
+        for ($i = 0; $i < count($dataArr); $i ++)
+        {
+
+            // "Form_id" => "134"
+            // "Form_date" => "07-07-2020 12:49"
+            // "Status" => "unread"
+            // "Name" => "Michael O’Shea"
+            // "Email" => "michael@talentfinderireland.com"
+            // "Address" => "Monrovia"
+            // "City" => "Monrovia"
+            // "Phone" => "84361568814"
+            // "Workphone" => "84314399555"
+            // "Business" => ""
+            // "Service" => "Band"
+            // "Message" => """
+            //   Due to the current pandemic, there is a surge of good quality candidates available at the \r\n
+            //   moment. \r\n
+            //   If you are thinking about recruiting, now is a good time to advertise. \r\n
+            //   We have the perfect solution for you. \r\n
+            //   We will create a professionally written job advert and advertise across all of the major job \r\n
+            //   boards: \r\n
+            //   Indeed \r\n
+            //   Jobs.ie \r\n
+            //   LinkedIn \r\n
+            //   Facebook \r\n
+            //   Twitter \r\n
+            //   Instagram \r\n
+            //   CV Library \r\n
+            //   Google for Jobs \r\n
+            //   Advertise for 28 days from as little as €299, with discounts available for multiple job adverts. \r\n
+            //   To find out more, call me on (01) 9069204 or reply to this email \r\n
+            //   michael@talentfinderireland.com \r\n
+            //   Many thanks, \r\n
+            //   Michael O’Shea
+
+            $name = $dataArr[$i]['Name'];
+            $email = $dataArr[$i]['Email'];
+            $name = $dataArr[$i]['Name'];
+            $phone = $dataArr[$i]['Phone'];
+            $City = $dataArr[$i]['City'];
+            $Address = $dataArr[$i]['Address'];
+
+            $password = "123456";
+
+             DB::table('supplier_profile')->Insert([
+                'user_id' => 0,
+                'name' => $name,
+                'email' => $email,
+                'city' => $City,
+                'address' => $Address,
+                'password' => Hash::make($password),
+                'password_string' => $password,
+                'phone' => $phone,
+                'status'=>"Disapproved",
+               ]);
+        }
+    
+        return "Successfully saved data from CSV.";
 
 
+    }
 
+    function csvToArray($filename = '', $delimiter = ',')
+    {
+        if (!file_exists($filename) || !is_readable($filename))
+            return false;
+    
+        $header = null;
+        $data = array();
+        if (($handle = fopen($filename, 'r')) !== false)
+        {
+            while (($row = fgetcsv($handle, 1000, $delimiter)) !== false)
+            {
+                if (!$header)
+                    $header = $row;
+                else
+                    $data[] = array_combine($header, $row);
+            }
+            fclose($handle);
+        }
+        return $data;
+    }
+    
+    public function invoice_download($booking_id = null,Request $request){
+        $booking = '';
+         $user_id = '';
+        if(Auth::guard('customer')->user()){
+            $user_id =  Auth::guard('customer')->user()->id;
+        }
+        if(isset($booking_id) && $booking_id != ''){
+            $booking =  DB::table('supplier_services')
+            ->join('supplier_profile', 'supplier_services.supplier_id', '=', 'supplier_profile.id')
+            ->join('booking', 'supplier_services.id', '=', 'booking.supplier_services_id')
+            ->join('events', 'booking.event_id', '=', 'events.id')
+            ->join('services', 'supplier_services.service_id', '=', 'services.id')
+            ->join('customer_profile', 'booking.customer_id', '=', 'customer_profile.id')
+            ->where('booking.id',$booking_id)
+            ->select('booking.id as booking_id','services.name as service_name','supplier_profile.name as sname','customer_profile.name as cname','supplier_profile.*','booking.*','events.name as event_name','supplier_services.*','supplier_profile.id as supplier_id')
+            ->first();
+
+            if($booking){
+                $booking = (array) $booking;
+            view()->share('getBooking',$booking);
+           // $pdf = PDF::loadView('emails.Order_Complete_User');
+           //  $invoice_download_link = $pdf->download('invoice.pdf');
+            
+             $filename = base64_encode($booking_id)."_invoice".date('Y_m_d_H_i_s').".pdf";
+
+             PDF::loadView('emails.Order_Complete_User')->save(public_path('uploads/Invoice-pdf/'.$filename))->stream('invoice.pdf');
+
+             $invoice_download_link = asset('uploads/Invoice-pdf/'.$filename);
+
+            return Response::json(["success"=>"Invoice download Successfully","invoice_download_link"=>$invoice_download_link,"invoice_download_file"=>$filename]);
+            }else{
+                return Response::json(["error"=>" No Invoice Found..."]);
+            }
+        }else{
+            return Response::json(["error"=>" No Invoice Found..."]);
+        }
+     }
+
+
+     public function ProfileVerificationByEmailLink(Request $request, $customer_id)
+     {
+         $user = Customer::where('id',base64_decode($customer_id))->first();
+ 
+             if($user){
+                
+                 if($user->status == "Approved"){
+                   //  return response()->json(["success" => "This Profile is already in verified."]);
+                     Session::flash('success', "This Profile is already in verified.");
+                  
+                     return redirect()->route("home");
+
+                 }
+                 if($user->status == "Disapproved"){
+                     $Customer = Customer::where('id',base64_decode($customer_id))->update([
+                         'status' => "Approved",
+                        ]);
+ 
+                   //  return response()->json(["success" =>  "This Profile is Successfully verified."]);
+
+                     Session::flash('success', "This Profile is Successfully verified.");
+                  
+                     return redirect()->route("home");
+
+                 }
+             }else{
+                // return response()->json(["error" => "Profile not found."]);
+                 Session::flash('error', "Profile not found.");
+                  
+                 return redirect()->route("home");
+             }
+  
+     }
 
 }

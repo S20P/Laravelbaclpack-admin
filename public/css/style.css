@@ -1196,7 +1196,9 @@ li img {
 	#5973e6 100%);
 	-webkit-background-clip:text;
 	-webkit-text-fill-color:transparent;
-	padding-top:15px
+	padding-top:15px;
+	text-align: center;
+	line-height: normal;
 }
 .category-item {
 	padding-top:115px;
@@ -1375,7 +1377,7 @@ ul.category-list-nav li a:hover {
 .sidebar-block .title-block h2 {
 	color:#fff;
 	font-size:24px;		
-    margin-bottom: 15px;
+    margin-bottom:15px;
 }
 .sidebar-block.planning-block .title-block .sub-heading {
 	font-size:30px
@@ -1566,7 +1568,7 @@ a.sidebar-drop-btn i {
 	#f85756 100%);
 	-webkit-background-clip:text;
 	-webkit-text-fill-color:transparent;
-	font-size:22px;
+	font-size:18px;
 	font-family:Avenir-Black;
 	letter-spacing:.7px;
 	margin:0;
@@ -1809,7 +1811,9 @@ a.sidebar-drop-btn i {
 	top:0;
 	margin:0 auto;
 	height:100%;
-	width:100%
+	/*width:100%*/
+	left: 0;
+	right: 0;
 }
 .vendor-item .company-name {
 	display:block;
@@ -1905,8 +1909,8 @@ footer {
 }
 .footer-bottom-content {
 	border-top:1px solid #fff;
-	padding:20px 0 0;
-	margin-top:40px
+	padding:40px 0 0;
+	margin-top:30px
 }
 .footer-bottom-content .footer-widget-title {
 	margin-bottom:10px
@@ -1959,8 +1963,10 @@ footer {
 footer .filter_search {
 	margin:0 auto;
 	background:0 0;
-	padding:0 0 50px 0
+	padding:0 0 50px 0;
+	text-align: center;
 }
+footer .filter_search .search-field-custom{width: 50%;text-align: left;}
 .newsletter .footer-widget-title {
 	margin-bottom:20px
 }
@@ -2374,7 +2380,7 @@ footer .filter_search {
 }
 .get-touch-btn-block button:last-child {
 	margin-bottom:0;
-	margin-top:10px
+	/*margin-top:10px*/
 }
 .price-range .range-block {
 	display:inline-block;
@@ -2421,7 +2427,8 @@ a.reset-filter {
 	display:inline-block;
 	color:#fff;
 	letter-spacing:.5px;
-	font-size:14px
+	font-size:14px;
+	margin-bottom: -15px;
 }
 .our-block-list {
 	display:flex;
@@ -2874,7 +2881,7 @@ span.play-button {
 }
 .list-title h5 {
 	font-family:Avenir-Heavy;
-	font-size:14px;
+	font-size:16px;
 	line-height:1.6;
 	margin:0;
 	position:relative;
@@ -2931,7 +2938,7 @@ span.play-button {
 .list-accordion-section-neww {
 	margin-top:30px
 }
-#faq-section .search-block {
+#faq-section .search-block,.help-block .search-block {
 	margin:40px auto 60px;
 	width:100%;
 	max-width:900px
@@ -3414,8 +3421,11 @@ ul.pagination li a:hover {
 	display:flex!important;
 	flex-wrap:wrap!important
 }
+.get-touch-btn-block .form-group:first-child {
+    margin: 0;
+}
 .get-touch-btn-block #accordion .card {
-	margin-bottom:20px
+	margin-bottom:15px
 }
 .get-touch-btn-block #accordion .card:last-child {
     margin: 0;
@@ -4236,13 +4246,14 @@ body.modal-open {
 }
 .FrontEnd_pages_Faq .content #faq-section,
 .FrontEnd_pages_SupplierTackandCare .content .supplier-block {
-	position:relative
+	position:relative;
+	overflow: hidden;
 }
 .faq-title h2 {
 	font-size:30px;
 	letter-spacing:1.5px
 }
-#faq-section .faq-title {
+#faq-section .faq-title,.help-block .help-title {
 	max-width:950px;
 	width:100%;
 	margin:0 auto
@@ -4339,6 +4350,28 @@ body.modal-open {
 	margin-top:10px;
 	display:inline-block
 }
+
+.payerror-sec .btn {
+	text-align:center;
+	border-radius:5px;
+	color:#fff;
+	font-size:14px!important;
+	letter-spacing:2px;
+	text-transform:uppercase;
+	background-size:200% auto;
+	transition:.5s;
+	font-family:Avenir-Heavy;
+	padding:15px 15px;
+	background-image:linear-gradient(61deg,
+	#fff 0,
+	#8bc34a 0,
+	#009688 100%);
+	max-width:200px;
+	width:100%;
+	margin-top:10px;
+	display:inline-block
+}
+
 #customer_edit_account {
 	position:absolute;
 	right:30px;
@@ -4492,7 +4525,8 @@ body.modal-open {
 	justify-content:center;
 	align-items:center;
 	height:180px;
-	font-size:20px
+	font-size:20px;
+	z-index: 0;
 }
 #faq-section .alert-warning {
 	margin-top:30px
@@ -4871,7 +4905,8 @@ button.btn.white-btn.create-acc {
 }
 .select-items div {
 	color:#000;
-	padding:16px 15px
+	padding:16px 15px;
+	text-transform: capitalize;
 }
 .select-items.select-hide {
 	transition:all .5s ease-in-out 0s;
@@ -5213,3 +5248,33 @@ input[type=number]::-webkit-outer-spin-button {
 .status_label label{
    margin-bottom: 0px;
 }
+
+sub.span_message_alert_nav{
+    margin-right: 20px;
+    background: #ffffff;
+    color: #705cfc;
+    padding: 15px 20px;
+    margin-top: -10px;
+    border-radius: 20px;
+    display: inline;
+    align-items: center;
+    min-width: 50px;
+    float: right;
+    /* position: initial; */
+    font-size: 20px;
+}
+sub.span_message_alert_nav sub{
+
+position: unset;
+}
+
+.business-profile{
+	display: flex;
+	align-items: center;
+	margin-bottom: 15px;
+	margin-top: 50px;
+}
+.busines-name{
+	padding-left: 15px;
+}
+.business-profile h2{margin-bottom: 0;}

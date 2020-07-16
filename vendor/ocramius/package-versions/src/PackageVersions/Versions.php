@@ -106,6 +106,7 @@ final class Versions
   'symfony/translation-contracts' => 'v2.0.1@8cc682ac458d75557203b2f2f14b0b92e1c744ed',
   'symfony/var-dumper' => 'v4.4.2@be330f919bdb395d1e0c3f2bfb8948512d6bdd99',
   'tijsverkoyen/css-to-inline-styles' => '2.2.2@dda2ee426acd6d801d5b7fd1001cde9b5f790e15',
+  'torann/laravel-meta-tags' => 'v3.0.8@b8db8455847d5f8c19e6c445bb7bd43c67dd3569',
   'venturecraft/revisionable' => '1.33.0@31034cf307808eae0bf776e9c13793495d7f19f3',
   'vlucas/phpdotenv' => 'v3.6.0@1bdf24f065975594f6a117f0f1f6cabf1333b156',
   'doctrine/instantiator' => '1.3.0@ae466f726242e637cebdd526a7d991b9433bacf1',

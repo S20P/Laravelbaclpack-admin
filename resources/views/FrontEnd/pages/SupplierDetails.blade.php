@@ -47,8 +47,25 @@
                         <div class="row">
                             <div class="col-md-7 col-lg-8 left-part">
                                 <div class="company-name">
-                                    <span class="sub-heading gradient-pink-text">{{$vendors['supplier_name']}}</span>
+
+                                	<div class="business-profile">
+                                	<div class="company-img">
+                                		 @if(isset($vendors['company_image']))
+                                <img width="150px" src="{{ asset($vendors['company_image']) }} ">
+                            @else
+                                <img width="150px src="{{ asset('images/avtar.png') }}">
+                            @endif
+                                	</div>
+                                	<div class="busines-name">
+                                		                                    <span class="sub-heading gradient-pink-text">
+                            
+                            {{$vendors['supplier_name']}}
+                                    
+                                    </span>
                                      <h2>{{$vendors['business_name']}}</h2>
+                                	</div>
+                                	</div>
+
                                     <div class="share-btns">
                                         <a href="javascript:void(0)" class="{{ $user_id ? 'add_wishlist' : 'add_wishlist_new' }}"><i  class="far fa-heart {{ wishExistDetails($vendors['supplier_service_id'],$user_id ? $user_id : 0) }}"></i></a>
                                         <a data-toggle="modal" data-target="#share_modal" class="a2a_dd" href="#"><i class="fal fa-share"></i></a>
@@ -300,7 +317,7 @@
                                             </div>
                                             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                                               <div class="card-body">
-                                                {{$vendors['phone']}}
+                                                <a href="tel:{{$vendors['phone']}}">{{$vendors['phone']}}</a>
                                               </div>
                                             </div>
                                           </div>
@@ -314,7 +331,7 @@
                                             </div>
                                             <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                                               <div class="card-body">
-                                                 {{$vendors['email']}}
+                                                 <a href="mailto:{{$vendors['email']}}" target="_top">{{$vendors['email']}}</a>
                                               </div>
                                             </div>
                                           </div>
@@ -371,7 +388,7 @@
                                             </div>
                                             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                                               <div class="card-body">
-                                                {{$vendors['phone']}}
+                                              <a href="tel:{{$vendors['phone']}}">{{$vendors['phone']}}</a>
                                               </div>
                                             </div>
                                           </div>
@@ -385,7 +402,7 @@
                                             </div>
                                             <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                                               <div class="card-body">
-                                                 {{$vendors['email']}}
+                                              <a href="mailto:{{$vendors['email']}}" target="_top">{{$vendors['email']}}</a>
                                               </div>
                                             </div>
                                           </div>
@@ -522,6 +539,12 @@
                                    <div class="error_login"></div>
                                    <button type="submit"class="btn white-btn" value="Login"><span class="gradient-pink-text">Login</span></button>
                                 </form>
+
+                                <div class="forgott">
+                    <br>
+                     <p> <a class="sign-up header-btn" href=""><span>Sign up</span></a> </p> 
+                     <p> <a href="{{ route('password.reset','customer') }}">Forgot Your customer Profile Password?</a></p>
+                    </div>
                              </div>
                        </div>
 

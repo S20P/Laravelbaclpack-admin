@@ -28,11 +28,13 @@
             <div class="contact-area">                
                 <div class="single-contact-box">
                     <span class="gradient-pink-text change_name">{{$user_details['name']}}</span>
+                    @if(count($supplier_service_details) > 0)
                     <h1 class="business_title">{{$supplier_service_details[0]->business_name}}</h1>
+                    @endif
                    
-                    <a href="tel:{{$user_details['phone']}}" class="change_phone">
+                    <a href="tel:+353{{$user_details['phone']}}" class="change_phone">
                     @if($user_details['phone'] != '')  
-                    +@php
+                    +353 @php
                          echo chunk_split($user_details['phone'], 3, ' ');
                          @endphp
                          @endif

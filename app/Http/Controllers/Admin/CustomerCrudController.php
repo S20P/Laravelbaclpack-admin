@@ -111,14 +111,15 @@ $this->addCustomCrudFilters();
             'fake' => true,
         ]);
 
-        $this->crud->addField([
-            'name'           => 'status',
-            'type'           => 'radio',
-            'label'          => 'Status',
-            'options' => ["Approved" => "Approved", "Disapproved" => "Disapproved"],
-            'default' => "Disapproved",
-            'inline'      => true,
-        ]);
+        // $this->crud->addField([
+        //     'name'           => 'status',
+        //     'type'           => 'radio',
+        //     'label'          => 'Status',
+        //     'options' => ["Approved" => "Approved", "Disapproved" => "Disapproved"],
+        //     'default' => "Disapproved",
+        //     'inline'      => true,
+        // ]);
+
         $this->crud->addField([
             'name'           => 'image',
             'type'           => 'upload',
@@ -132,6 +133,8 @@ $this->addCustomCrudFilters();
         // TODO: remove setFromDb() and manually define Fields
         $this->crud->setFromDb();
         $this->crud->removeField('user_id');
+        $this->crud->removeField('status');
+        $this->crud->removeField('password_string');
     }
 
        
@@ -142,7 +145,7 @@ $this->addCustomCrudFilters();
       $response = $this->traitStore();
       $Result = $this->crud->entry; 
    
-      $status = $Result->status;
+    //   $status = $Result->status;
       $email  = $Result->email;
       $name = $Result->name;
       $password = $Result->password;
@@ -153,7 +156,9 @@ $this->addCustomCrudFilters();
 
              $Customer = Customer::where('id',$id)
              ->update([
+                 "status"=>'Approved',
                  'user_id' => $user_id,
+                 'password_string' =>$password,
                  'password' => Hash::make($password),
                ]); 
          
@@ -195,14 +200,14 @@ $this->addCustomCrudFilters();
 
     protected function setupUpdateOperation()
     {
-       $this->crud->addField([
-            'name'           => 'status',
-            'type'           => 'radio',
-            'label'          => 'Status',
-            'options' => ["Approved" => "Approved", "Disapproved" => "Disapproved"],
-            'default' => "Disapproved",
-            'inline'      => true,
-        ]);
+    //    $this->crud->addField([
+    //         'name'           => 'status',
+    //         'type'           => 'radio',
+    //         'label'          => 'Status',
+    //         'options' => ["Approved" => "Approved", "Disapproved" => "Disapproved"],
+    //         'default' => "Disapproved",
+    //         'inline'      => true,
+    //     ]);
 
         $this->crud->addField([
             'name'           => 'image',
@@ -216,6 +221,8 @@ $this->addCustomCrudFilters();
         $this->crud->removeField('user_id');
         $this->crud->removeField('password');
         $this->crud->removeField('password_confirmation');
+        $this->crud->removeField('status');
+        $this->crud->removeField('password_string');
     }
 
     public function update()
@@ -223,58 +230,58 @@ $this->addCustomCrudFilters();
           $response = $this->traitUpdate();
           $Result = $this->crud->entry;  
 
-          $status = $Result->status;
+        //   $status = $Result->status;
           $email  = $Result->email;
           $name = $Result->name;
 
-          $data = array(
-            'name'=>$name, 
-            'email'=>$email, 
-           );
+        //   $data = array(
+        //     'name'=>$name, 
+        //     'email'=>$email, 
+        //    );
           
-          if($status=="Approved"){
-             /*
-            * @Author: Satish Parmar
-            * @ purpose: This helper function use for send dynamic email template from db.
-            */
-            $template = EmailTemplate::where('name', 'Profile-approve-customer')->first();
-            $to_mail = $email;
-            $to_name = $name;
-            $view_params = [
-                'name'=>$name, 
-                'email'=>$email,
-                'base_url' => url('/'),
-            ];
-            // in DB Html bind data like {{firstname}}
-            send_mail_dynamic($to_mail,$to_name,$template,$view_params);
+        //   if($status=="Approved"){
+        //      /*
+        //     * @Author: Satish Parmar
+        //     * @ purpose: This helper function use for send dynamic email template from db.
+        //     */
+        //     $template = EmailTemplate::where('name', 'Profile-approve-customer')->first();
+        //     $to_mail = $email;
+        //     $to_name = $name;
+        //     $view_params = [
+        //         'name'=>$name, 
+        //         'email'=>$email,
+        //         'base_url' => url('/'),
+        //     ];
+        //     // in DB Html bind data like {{firstname}}
+        //     send_mail_dynamic($to_mail,$to_name,$template,$view_params);
   
-         /* @author:Satish Parmar EndCode */
+        //  /* @author:Satish Parmar EndCode */
 
-            // Mail::send("emails.Profile_approve_customer",$data, function($message) use ($email, $name)
-            // {
-            //     $message->to($email, $name)->subject('You’re in! Start planning');
-            // });
-          } 
+        //     // Mail::send("emails.Profile_approve_customer",$data, function($message) use ($email, $name)
+        //     // {
+        //     //     $message->to($email, $name)->subject('You’re in! Start planning');
+        //     // });
+        //   } 
 
-          if($status=="Disapproved"){
-                /*
-            * @Author: Satish Parmar
-            * @ purpose: This helper function use for send dynamic email template from db.
-            */
-           // $subject = "Party Perfect - Account Disapproved";
-            $template = EmailTemplate::where('name', 'Profile-disapprove-customer')->first();
-            $to_mail = $email;
-            $to_name = $name;
-            $view_params = [
-                'name'=>$name, 
-                'email'=>$email,
-                'base_url' => url('/'),
-            ];
-            // in DB Html bind data like {{firstname}}
-            send_mail_dynamic($to_mail,$to_name,$template,$view_params);
+        //   if($status=="Disapproved"){
+        //         /*
+        //     * @Author: Satish Parmar
+        //     * @ purpose: This helper function use for send dynamic email template from db.
+        //     */
+        //    // $subject = "Party Perfect - Account Disapproved";
+        //     $template = EmailTemplate::where('name', 'Profile-disapprove-customer')->first();
+        //     $to_mail = $email;
+        //     $to_name = $name;
+        //     $view_params = [
+        //         'name'=>$name, 
+        //         'email'=>$email,
+        //         'base_url' => url('/'),
+        //     ];
+        //     // in DB Html bind data like {{firstname}}
+        //     send_mail_dynamic($to_mail,$to_name,$template,$view_params);
   
-         /* @author:Satish Parmar EndCode */
-          }
+        //  /* @author:Satish Parmar EndCode */
+        //   }
          
 
         // do something after save

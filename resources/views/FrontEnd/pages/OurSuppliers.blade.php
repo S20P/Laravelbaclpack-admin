@@ -70,7 +70,7 @@
                                 </select>
                                 @endif
                             </div>
-                            <div class="form-group custom-select">
+                            <div class="form-group custom-select" >
                                 @if(isset($filters['allservices']))
                                 <select name="service_name">
                                      <option value="">Select Service</option>
@@ -82,12 +82,12 @@
                                         @endif
                                     @endforeach
                                 </select>
-                                @endif
+                                @endif  
                             </div>
                             <div class="form-group custom-select">
                                 @if(isset($filters['alllocation']))
-                                <select name="location">
-                                    <option value="">Select Country</option>
+                                <select name="location" >
+                                    <option value="">Select county</option>
                                     @foreach($filters['alllocation'] as $alllocationdata)
                                         <option value="{{$alllocationdata['id']}}" @if(isset($location)) @if($alllocationdata['id'] == $location) selected="selected" @endif @endif>{{$alllocationdata['location_name']}}</option>
                                     @endforeach
@@ -220,7 +220,7 @@
                                 <div class="form-group custom-select">
                                     @if(isset($filters['alllocation']))
                                     <select name="location">
-                                        <option value="">Select Country</option>
+                                        <option value="">Select county</option>
                                         @foreach($filters['alllocation'] as $alllocationdata)
                                             <option value="{{$alllocationdata['id']}}" @if(isset($location)) @if($alllocationdata['id'] == $location) selected="selected" @endif @endif>{{$alllocationdata['location_name']}}</option>
                                         @endforeach
@@ -307,7 +307,20 @@
 
                                 <li><a >{{$vendorsdata->service_name}}</a></li>
                                 <li><a >
-                                        {{$vendorsdata->event_name}}
+                                @if(isset($vendorsdata->events) && count($vendorsdata->events) > 0)
+                                @php 
+                                $total = count($vendorsdata->events);
+                                $i=0;
+                                @endphp
+                                @foreach($vendorsdata->events as $key=>$eventsdata)
+                                @php   $i++;  @endphp
+                                      {{$eventsdata->event_name}} 
+                                      @if ($i != $total) 
+                                      , 
+                                     @endif
+
+                               @endforeach
+                                @endif
                                     </a></li>
                                 <li><a >
                                     @if(isset($location) && $location != '')
@@ -316,10 +329,12 @@
                                             @endphp
                                     @else
                                             @php
+                                            if($vendorsdata->location){
                                                $dataList = substr($vendorsdata->location, 1, -1);
                                                $dataList =  str_replace("\"","",$dataList);
                                                $dataList = explode(",",$dataList);
                                                echo getLocationName($dataList[0]);
+                                            }
                                             @endphp
                                     @endif</a></li>
                                 <li><a >
@@ -420,9 +435,13 @@
                        <div class="error_login"></div>
                        <button type="submit"class="btn white-btn" value="Login"><span class="gradient-pink-text">Login</span></button>
                     </form>
-                 </div>
+                    <div class="forgott">
+                    <br>
+                     <p> <a class="sign-up header-btn" href=""><span>Sign up</span></a> </p> 
+                     <p> <a href="{{ route('password.reset','customer') }}">Forgot Your customer Profile Password?</a></p>
+                    </div>
+              </div>
            </div>
-
          </div>
        </div>
     </section>
@@ -433,7 +452,7 @@
     if($(window).width() > 767)
     {
         $('#our-suppliers-block .col-sm-12.col-md-4').theiaStickySidebar({
-            additionalMarginTop: 0
+            additionalMarginTop: 20
         });
     }
     $(document).ready(function () {

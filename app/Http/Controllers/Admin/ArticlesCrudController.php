@@ -98,6 +98,7 @@ class ArticlesCrudController extends CrudController
                 'label' => 'Featured', // Table column heading
                 'type'  => 'check',
             ]
+           
         ]);
           //  $this->crud->setFromDb();  
           $this->addCustomCrudFilters();
@@ -289,6 +290,15 @@ class ArticlesCrudController extends CrudController
 	        // 'tab'   => 'Big texts',
         ]);   
 
+        $this->crud->addField([ 
+            'name' => 'filter_by',
+            'label' => "FILTER BY",
+            'type' => 'select2_from_array',
+            'options' =>["all"=>"All","most_recent"=>"Most Recent","oldest"=>"Oldest"],
+            'allows_null' => false,
+            'default' => 'all',
+        ]);
+
         $this->crud->setValidation(ArticlesRequest::class);
 
         // TODO: remove setFromDb() and manually define Fields
@@ -454,7 +464,16 @@ class ArticlesCrudController extends CrudController
 	        'label' => 'Column2 description',
 	        'type'  => 'ckeditor',
 	        // 'tab'   => 'Big texts',
-        ]);    
+        ]);  
+        
+        $this->crud->addField([ 
+            'name' => 'filter_by',
+            'label' => "FILTER BY",
+            'type' => 'select2_from_array',
+            'options' =>["all"=>"All","most_recent"=>"Most Recent","oldest"=>"Oldest"],
+            'allows_null' => false,
+            'default' => 'all',
+        ]);
          // $this->crud->setValidation(ArticlesUpdateRequest::class);
 
         // TODO: remove setFromDb() and manually define Fields

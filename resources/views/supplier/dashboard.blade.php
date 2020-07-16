@@ -2,6 +2,48 @@
 @section('content')
 
 
+   
+<style>
+/*the container must be positioned relative:*/
+.autocomplete {
+  position: relative;
+  display: inline-block;
+  width:100%;
+}
+
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff; 
+  border-bottom: 1px solid #d4d4d4; 
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+  background-color: #e9e9e9; 
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+  background-color: DodgerBlue !important; 
+  color: #ffffff; 
+}
+</style>
+
+
 
 <input type="hidden" class="supplier_id" value="{{$user_details['id']}}">
 
@@ -124,7 +166,13 @@
       <div class="supplier-services-edit">
       <div class="row justify-content-center">
          <div class="col-md-12">
-         <h2 class="gradient-pink-text">Supplier Services</h2>
+         
+         <div class="booking_top">
+      <h2 class="gradient-pink-text"><span>Supplier Services</span></h2>
+         <button type="button" class="btn common-btn add-btn" id="add_supplier_service">
+         <i class="fal fa-plus"></i>Add
+         </button>
+         </div>
             <div class="event-service">
                <div class="table-responsive">
                   <table class="table" >
@@ -205,13 +253,29 @@
                               </div> 
 
                               <div class="form-group">
-                              <label for="event_address">Event Venu</label>
+                              <label for="event_address">Event Venue</label>
                               <textarea name="event_address" id="event_address" cols="3" rows="3"></textarea>
                               </div>
+
+                              
+                              <div class="autocomplete">
                               <div class="form-group">
                                    <label for="customer_email">Customer Email</label>
-                                   <input type="email" name="customer_email" id="customer_email" placeholder="CUSTOMER EMAIL">
-                             </div>                              
+                                    <input id="myInput" type="text" class="customer_email" name="customer_email" placeholder="CUSTOMER EMAIL">
+                              </div>
+                              </div>
+                                   <!-- <input type="email" name="customer_email" id="customer_email" placeholder="CUSTOMER EMAIL"> -->
+
+                                   <!-- <select  class="select_custom" name="customer_email" id="customer_email" placeholder="CUSTOMER EMAIL">
+                                     <option disabled="disabled" selected>Select Customer Email</option>
+                                       @if(isset($customer_email_list) && $customer_email_list != "")
+                                             @foreach($customer_email_list as $key=>$customer_item)
+                                               <option value="{{$customer_item->email}}">{{$customer_item->email}}</option>
+                                             @endforeach
+                                       @endif
+                                 </select> -->
+
+                                                        
                               <div class="form-group">
                                  <label for="amount">Amount</label>
                                  <input type="text" name="amount" placeholder="AMOUNT">
@@ -556,7 +620,7 @@
                                    </div>
                                    <div class="col-10 messenger_right">
                                       <div class="list-title">
-                                         <h5>{{$value->customer_name}}</h5>
+                                         <h5>{{$value->customer_name}} : <span id="customer_message_mail">{{$value->customer_email}}</span></h5> 
                                          <p>Service : {{$value->services_name}}
                                            @php
                                           foreach($conversation as $key_count => $value_count){
@@ -698,7 +762,7 @@
                                                             <div class="add_invoice_event"></div>
                                                          </div>
                                                          <div class="form-group">
-                                                         <label for="">Event Venu</label>
+                                                         <label for="">Event Venue</label>
                                                          <textarea name="event_address" id="event_address" cols="3" rows="3"></textarea>
                                                          </div>
                                                          <div class="form-group">
@@ -747,7 +811,7 @@
                               </div> 
 
                               <div class="form-group">
-                              <label for="event_address">Event Venu</label>
+                              <label for="event_address">Event Venue</label>
                               <textarea name="event_address" id="event_address" class="edit_event_address" cols="3" rows="3"></textarea>
                               </div>
                               <div class="form-group">
@@ -812,7 +876,128 @@
 
 
 
+  <!-- Supplier-service ADD Model -->
+  <div class="mobile-modal modal fade curdmodel" id="add_supplier_services_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-body">
+                     <div class="sidebar-block">
+                        <div class="title-block">
+                           <h2>Add</h2><a class="modal-close" data-dismiss="modal"><img width="15px" src="{{ asset('images/modal-close.svg')}}"></a>
+                        </div>
 
+               <!-----------------------------------------------------------------------------------------------------------------
+                                                      Supplier-service ADD Form 
+               ------------------------------------------------------------------------------------------------------------------>
+                        <form  method="POST"  name="supplier_services_add_form" class="supplier_services_add_form">
+                                @csrf
+                                <input type="hidden" class="supplier_id" name="supplier_id" value="{{$user_details['id']}}">
+                          <div class="get-touch-btn-block">
+                         
+                         <div class="row">
+
+                           <div class="col-sm-12 col-md-6">
+
+                           <div class="form-group">
+                           <label>TYPE OF SERVICE</label>
+                           <select class="services services_desktop" name="service_id" required>
+                                 <option disabled="disabled" selected>TYPE OF SERVICE</option>
+                                 @if(isset($Services) && $Services != "")
+                                    @foreach($Services as $key=>$Servicesvalue)
+                                    <option value="{{$Servicesvalue->id}}">{{$Servicesvalue->name}} ({{$currency_symbol}}{{$Servicesvalue->price}})</option>
+                                    @endforeach
+                                 @endif
+                              </select>
+                           </div>
+                        </div>
+
+                           <div class="col-sm-12 col-md-6">
+                           <div class="form-group">
+                           <label>TYPE OF EVENT</label>
+                           <!-- <div class="custom-select"> -->
+                              <select class="" name="event_id[]" multiple="" required>
+                                 <option disabled="disabled" selected>TYPE OF EVENT</option>
+                                 @if(isset($Events) && $Events != "")
+                                    @foreach($Events as $key=>$Eventsvalue)
+                                    <option value="{{$Eventsvalue->id}}">{{$Eventsvalue->name}}</option>
+                                    @endforeach
+                                 @endif
+                              </select>
+                         <!-- </div> -->
+                           </div>
+                          </div>
+
+
+                           <div class="col-sm-12 col-md-6">
+                           <div class="form-group">
+                               <label for="price_range">Price Range</label>
+                                    <select name="price_range" required>
+                                    <option disabled="disabled" selected>Price Range</option>
+                                 @if(isset($PriceRange) && $PriceRange != "")
+                                    @foreach($PriceRange as $key=>$PriceRangevalue)
+                                    <option value="{{$PriceRangevalue->status}}">{{$PriceRangevalue->range}} ({{$PriceRangevalue->symbol}})</option>
+                                    @endforeach
+                                 @endif
+                              </select>
+                                 
+                              </div> 
+                           </div>
+
+                         <div class="col-sm-12 col-md-6">
+                           <div class="form-group">
+                              <label>Name of Business</label>
+                              <input type="text" name="business_name">
+                           </div> 
+                        </div>
+                              
+                              <div class="col-sm-12 col-md-12">      
+                           <div class="form-group">
+                              <label>Description of service</label>
+                              <textarea type="text" name="service_description"></textarea>
+                           </div>
+                        </div>
+
+                        <div class="form-group col-sm-12 required">
+                        <label>Location</label>
+
+                        <select class="form-control" name="location[]" multiple="" >
+                        <option value="">Select location</option>
+                                    @if(isset($locations) && $locations != "")
+                                       @foreach($locations as $key=>$location)
+                                       <option value="{{$location->id}}">{{$location->location_name}}</option>
+                                       @endforeach
+                                    @endif 
+                        </select>
+                         </div>
+                   
+
+<div class="col-sm-12 col-md-6">
+                           <div class="form-group">
+                              <label>Facebook Link</label>
+                              <input type="text" name="facebook_link" class="facebook_link">
+                           </div>
+                        </div>
+
+
+<div class="col-sm-12 col-md-6">
+                           <div class="form-group">
+                              <label>Instagram Link</label>
+                                    <input type="text" name="instagram_link"  class="instagram_link">
+                           </div>
+                        </div>
+                     </div>
+
+
+                     <br>
+                              <button type="submit" class="btn white-btn"><span class="gradient-pink-text">Save</span></button>
+                           </div>
+                        </form>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+<!-- Supplier-service ADD Model end-->
        
   <!-- Supplier-service Edit Model -->
   <div class="mobile-modal modal fade curdmodel" id="edit_supplier_services_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -917,6 +1102,9 @@
                            </div>
                         </div>
                      </div>
+
+
+                     <br>
                               <button type="submit" class="btn white-btn"><span class="gradient-pink-text">Update</span></button>
                            </div>
                         </form>
@@ -1029,4 +1217,136 @@
 <!-- /Bootstrap <a href="https://www.jqueryscript.net/accordion/">Accordion</a> -->
 </div>
 <!-- Service Slider Edit Model end-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+<script>
+function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+
+              console.log("arr[i]",arr[i]);
+
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+          b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+  /*execute a function when someone clicks in the document:*/
+  document.addEventListener("click", function (e) {
+      closeAllLists(e.target);
+  });
+}
+
+/*An array containing all the country names in the world:*/
+// var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua & Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia & Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre & Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts & Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Turks & Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+
+
+		$.ajax(
+		{
+			type: "GET",
+			url: "{{route('customer_email_list')}}",
+			success: function (data)
+			{
+            var list = [];
+            
+            console.log(data.customer_emails['length']);
+
+              if(data.customer_emails['length'] > 0){
+                 var emails_list = data.customer_emails;
+                 for(var c=0;c<emails_list['length'];c++){
+                  list.push(emails_list[c].email);
+                 }
+              }
+
+console.log("LIST",list);
+            autocomplete(document.getElementById("myInput"),list);
+			}
+		});
+/*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+
+</script>
+
 @endsection

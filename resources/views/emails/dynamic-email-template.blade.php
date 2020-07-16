@@ -46,7 +46,7 @@
                                                                         <tr>
                                                                             <td>
                                                                                 <a href="{{base_url}}"><img
-                                                                                        src="{{base_url}}/uploads//b0361916144f287f08900bc59ed6689e.png"
+                                                                                        src="{{base_url}}/images/logoMailSend.png"
                                                                                         alt="Logo" width="217px"
                                                                                         style="display: block;"></a>
 
@@ -90,23 +90,8 @@
                                                                     <tbody>
                                                                     <tr>
                                                                 <td><br>
-                                                                    Dear {{name}},
+                                                                     {{content}},
                                                                     <br>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    Your Password is Reset by Admin.<br>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    Your new  Password is:<br>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    Password : {{password}}<br>
                                                                 </td>
                                                             </tr>
                                                                          <tr>

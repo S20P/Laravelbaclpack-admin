@@ -72,8 +72,40 @@
                 </div>
             </section>
 
-            <div class="d-flex footer-widgets wow fadeInUp"  data-wow-duration="0.5s" data-wow-delay="0.5s">
-                <div class="single-footer-widget">
+            <div class="d-flex footer-widgets wow fadeInUp row"  data-wow-duration="0.5s" data-wow-delay="0.5s">
+             <div class="single-footer-widget1 col-md-4 col-sm-12">
+                    <div class="widget widget_links">
+                        <ul>
+                            <li class="footer-widget-title menu-item">Useful links</li>
+                            <li class="menu-item">
+                                <a href="{{ route('Help') }}">Help</a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="{{ route('Faq') }}">FAQ</a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="{{ route('SupplierTackandCare') }}">Supplier T&C</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="single-footer-widget1 col-md-4 col-sm-12">
+                    <div class="widget widget_links">
+                        <ul>
+                            <li class="footer-widget-title menu-item">About</li>
+                            <li class="menu-item">
+                                <a href="{{ route('Blog') }}">Blogs</a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="{{route('OurStory')}}">Our Story</a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="{{route('Contacts')}}">Contact Us</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="single-footer-widget1 col-md-4 col-sm-12">
                     <div class="widget widget_links">
                         <ul>
                             <li class="footer-widget-title menu-item">Suppliers</li>
@@ -93,72 +125,6 @@
                         </ul>
                     </div>
                 </div>
-                @php
-                    $services = getServices();
-                    $events = getEvents();
-                @endphp
-                <div class="single-footer-widget">
-                    <div class="widget widget_links">
-
-                        @if(isset($events) && $events != '')
-                            <ul>
-                                <li class="footer-widget-title menu-item">Events</li>
-                                @foreach($events as $event)
-                                    <li class="menu-item">
-                                        <a>{{$event['name']}}</a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
-                    </div>
-                </div>
-                <div class="single-footer-widget">
-                    <div class="widget widget_links">
-
-                        @if(isset($services) && $services != '')
-                        <ul>
-                            <li class="footer-widget-title menu-item">Services</li>
-                            @foreach($services as $service)
-                            <li class="menu-item">
-                                <a>{{$service['name']}}</a>
-                            </li>
-                            @endforeach
-                        </ul>
-                        @endif
-                    </div>
-                </div>
-                <div class="single-footer-widget">
-                    <div class="widget widget_links">
-                        <ul>
-                            <li class="footer-widget-title menu-item">Pages</li>
-                            <li class="menu-item">
-                                <a href="{{ route('Blog') }}">Blogs</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="{{route('OurStory')}}">Our Story</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="{{route('Contacts')}}">Contact Us</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="single-footer-widget">
-                    <div class="widget widget_links">
-                        <ul>
-                            <li class="footer-widget-title menu-item">Contents</li>
-                            <li class="menu-item">
-                                <a href="{{ route('Help') }}">Help</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="{{ route('Faq') }}">Faq</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="{{ route('SupplierTackandCare') }}">Supplier T&C</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
             </div>
             @php
                 $footers_data = getFooterDetails();
@@ -168,7 +134,7 @@
                     <div class="col-md-4">
                         <div class="widget_links">
                             <div class="footer-widget-title menu-item">PHONE</div>
-                            <a href="tel:+{{$footers_data->contact_number}}">
+                            <a href="tel:{{$footers_data->contact_number}}">
                             @if(isset($footers_data->contact_number))
                                 {{$footers_data->contact_number}}
                             @endif

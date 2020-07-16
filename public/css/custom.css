@@ -43,3 +43,85 @@
 #upload_image_label {
     display: contents;
 }
+
+
+.widget.widget_links {
+    margin-bottom: 15px;
+}
+
+.select-items {
+    overflow: scroll;
+    max-height: 320px;
+}
+
+
+
+/* Blog css */
+
+.gallery{
+	margin-bottom: 40px;	
+}
+.filter-button{
+background: #000;
+    color: #fff;
+    padding: 11px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-size: 13px;
+    -webkit-transition: all .3s ease 0s;
+    -moz-transition: all .3s ease 0s;
+    -o-transition: all .3s ease 0s;
+    transition: all .3s ease 0s;
+    line-height: 100%;
+    display: inline-block;
+    text-decoration: none!important;
+}
+
+.filter-button:hover {
+    background: #fff;
+    -webkit-transition: all .3s ease 0s;
+    -moz-transition: all .3s ease 0s;
+    -o-transition: all .3s ease 0s;
+    transition: all .3s ease 0s;
+    text-decoration: none;
+    color: #fff;
+}
+
+
+.filter-button>span {
+    color: #fff;
+}
+
+.filter-button:hover>span {
+    background: linear-gradient(to right,
+ #f84e6b 0,
+ #5973e6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-transition: all .3s ease 0s;
+    -moz-transition: all .3s ease 0s;
+    -o-transition: all .3s ease 0s;
+    transition: all .3s ease 0s;
+}
+
+div#filtersuppliers {
+    z-index: 10000;
+    background: #0000003b;
+}
+
+.menu-nav-link .help_page{
+    display: none;
+}
+
+
+@media only screen and (max-width: 767px) {
+    .select-items {
+        max-height: 180px;
+    }
+    
+    .select-items div {
+        padding: 10px 15px;
+        text-transform: capitalize;
+    }    
+}

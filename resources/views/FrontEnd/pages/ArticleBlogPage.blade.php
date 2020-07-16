@@ -168,7 +168,7 @@
                                             $blogid = base64_encode($relatedblogsdetails['blog_id']);
                                                 $date=date_create($relatedblogsdetails['date']);
                                                 echo $date =  date_format($date,"d/m/Y");
-                                                echo $relatedblogsdetails['id'];
+                                               
                                         @endphp
                                     </span>
                                     <div class="articles-detail">

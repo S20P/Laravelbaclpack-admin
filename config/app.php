@@ -158,6 +158,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         
+        Torann\LaravelMetaTags\MetaTagsServiceProvider::class,
 
         /*
         * Other Service Providers...
@@ -217,7 +218,7 @@ return [
         'CRUD'  => Backpack\CRUD\CrudServiceProvider::class,
         'Form'  => Collective\Html\FormFacade::class,
         'Html'  => Collective\Html\HtmlFacade::class,
-
+        'MetaTag'   => Torann\LaravelMetaTags\Facades\MetaTag::class,
         /*
         * Other Aliases...
         */

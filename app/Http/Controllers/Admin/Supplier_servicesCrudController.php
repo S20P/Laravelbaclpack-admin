@@ -61,7 +61,16 @@ class Supplier_servicesCrudController extends CrudController
                 'entity'    => 'Services', // the method that defines the relationship in your Model
                 'function_name' => 'getServices', // foreign key model
             ],
-            'business_name','service_description',
+             [
+                'name' => 'business_name',
+                'label' => "Business name",
+                'limit' => 1000
+            ],
+             [
+                'name' => 'service_description',
+                'label' => "Service description",
+                'limit' => 1000
+            ],
             [
                 // 1-n relationship
                 'label'     => 'Location', // Table column heading
@@ -69,6 +78,7 @@ class Supplier_servicesCrudController extends CrudController
                 'name'      => 'location', // the column that contains the ID of that connected entity;
                 'entity'    => 'Location', // the method that defines the relationship in your Model
                 'function_name' => 'getLocation', // foreign key model
+                'limit' => 1000
             ],
             [
                 'name' => 'price_range',

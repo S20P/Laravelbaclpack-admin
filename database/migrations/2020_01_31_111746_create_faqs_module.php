@@ -16,8 +16,8 @@ class CreateFaqsModule extends Migration
         Schema::create('faqs_module', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('key_word')->nullable();
-            $table->string('question')->nullable();
-            $table->string('answers')->nullable();
+            $table->longText('question')->nullable();
+            $table->longText('answers')->nullable();
             $table->timestamps();
         });
     }

@@ -34,12 +34,10 @@ class BookingsCrudController extends CrudController
         // $this->crud->removeButton('create');
 
       if(isset($this->crud->request->booking_id) && !empty($this->crud->request->booking_id)) {
-
                    $booking_id = $this->crud->request->booking_id;
                   $this->crud->addClause('where', 'id', '=', $booking_id);
-
               }
-
+        $this->crud->addButtonFromModelFunction('line','invoice_download', 'invoice_download', 'beginning');
 
         CRUD::addColumns([
             [

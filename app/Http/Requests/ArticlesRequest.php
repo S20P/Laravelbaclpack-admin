@@ -31,10 +31,10 @@ class ArticlesRequest extends FormRequest
             'date' => 'required|date',
             'quote' => 'required|min:5',
             'content' => 'required|min:5',
-            'banner_image' => 'required|image',
+            // 'banner_image' => 'required|image',
             'category_id' => 'required',
-            'media_type' => 'required',
-            'video' => 'url'
+            // 'media_type' => 'required',
+            // 'video' => 'url'
 
         ];
     }

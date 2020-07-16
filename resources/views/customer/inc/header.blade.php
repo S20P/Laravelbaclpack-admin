@@ -34,7 +34,7 @@
                 <div class="single-contact-box">
                     <h1 class="change_name">{{$user_details['name']}}</h1>
 
-                    <a href="tel:{{$user_details['phone']}}" class="change_phone"> @if($user_details['phone'] != '')+@php echo chunk_split($user_details['phone'], 3, ' '); @endphp @endif</a>
+                    <a href="tel:+353{{$user_details['phone']}}" class="change_phone"> @if($user_details['phone'] != '')@php echo "+353 ".chunk_split($user_details['phone'], 3, ' '); @endphp @endif</a>
 
                     <a href="mailto:{{$user_details['email']}}" class="change_email">{{$user_details['email']}}</a>
 {{--                    <div id="customer_edit_account"><i class="fa fa-edit"></i></div>--}}

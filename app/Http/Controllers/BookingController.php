@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Validator;
 use View;
 use DB;
 use App\Models\Location;
+use App\Models\Bookings;
 use Mail;
 use Response;
+use App\Models\EmailTemplatesDynamic as EmailTemplate;
 
 class BookingController extends Controller
 {
@@ -39,6 +41,8 @@ class BookingController extends Controller
          foreach ($booking as $key => $value) {
                 $date = strtotime($value->booking_date);
                 $booking[$key]->book_date = date('d-m-Y',$date);
+                $booking[$key]->encoded_id = base64_encode($value->id);
+
              }
         // $payment_status =  DB::table('payment')->where('booking_id',)
          return Response::json(["booking" => $booking, "symbol" => $site->currency_symbol]);
@@ -62,6 +66,7 @@ class BookingController extends Controller
              foreach ($booking as $key => $value) {
                 $date = strtotime($value->booking_date);
                 $booking[$key]->book_date = date('d-m-Y',$date);
+                $booking[$key]->encoded_id = base64_encode($value->id);
              }
          return Response::json(["booking" => $booking, "symbol" => $site->currency_symbol]);
      }
@@ -92,10 +97,10 @@ class BookingController extends Controller
         $event_address = $request['event_address'];
 
 
-        $booking_allready_exist = DB::table("booking")->where("customer_id",$customer_id)->first();
-        if($booking_allready_exist){
-            return Response::json(["info"=>"Booking Allready exist for this customer."]);  
-        }
+      //   $booking_allready_exist = DB::table("booking")->where("customer_id",$customer_id)->first();
+      //   if($booking_allready_exist){
+      //       return Response::json(["info"=>"Booking Allready exist for this customer."]);  
+      //   }
 
         $booking = DB::table("booking")->insert([
             "customer_id"=>$customer_id,
@@ -271,10 +276,109 @@ class BookingController extends Controller
                   </table>
                </div>';
 
-
          return Response::json(["content" => $content]);
-     
-
-
      }
+
+
+     public function SendBookingConfirmationEmail(Request $request,$booking_id)
+     {
+ 
+            $bookingData =  DB::table("supplier_services")
+            ->join('supplier_profile', 'supplier_services.supplier_id', '=', 'supplier_profile.id')
+            ->join('services', 'services.id', '=', 'supplier_services.service_id')
+            ->join('booking', 'booking.supplier_services_id', '=', 'supplier_services.id')
+            ->join('events', 'booking.event_id', '=', 'events.id')
+            ->join('customer_profile', 'booking.customer_id', '=', 'customer_profile.id') 
+            ->where('booking.id',$booking_id)
+            ->select('supplier_profile.name as supplier_name','customer_profile.name as customer_name','customer_profile.email as customer_email','services.name as service_name','events.name as event_name','booking.*')
+            ->first();   
+
+            if($bookingData){
+ 
+             $name =$bookingData->customer_name;
+             $email =$bookingData->customer_email;
+             $booking_date =  \Carbon\Carbon::parse($bookingData->booking_date)->format('d-m-yy');
+             $content ='<div class="card no-padding no-border">
+             <table class="table table-striped mb-0">
+                <tbody>
+                  <tr>
+                      <td>
+                         <strong>Booking date:</strong>
+                      </td>
+                      <td>
+                         <span>'.$booking_date.'</span></td>
+                   </tr>
+                   <tr>
+                      <td>
+                         <strong>Supplier service:</strong>
+                      </td>
+                      <td>
+                         <span>'.$bookingData->service_name.'</span>                                                                                                      
+                      </td>
+                   </tr>
+                   <tr>
+                      <td>
+                         <strong>Event:</strong>
+                      </td>
+                      <td>
+                         <span>'.$bookingData->event_name.'</span>                                                                                                      
+                      </td>
+                   </tr>
+                     <tr>
+                      <td>
+                         <strong>Event venues:</strong>
+                      </td>
+                      <td>
+                         <span>'.$bookingData->event_address.'</span>                                                                                                      
+                      </td>
+                   </tr>
+
+                   <tr>
+                      <td>
+                         <strong>Customer:</strong>
+                      </td>
+                      <td>
+                         <span>'.$bookingData->customer_name.'</span></td>
+                   </tr>
+                     <tr>
+                      <td>
+                         <strong>Supplier:</strong>
+                      </td>
+                      <td>
+                         <span>'.$bookingData->supplier_name.'</span></td>
+                   </tr>  
+                   <tr>
+                      <td>
+                         <strong>Amount:</strong>
+                      </td>
+                      <td>
+                         <span>'.$bookingData->amount.'</span></td>
+                   </tr>                      
+               </tbody>
+             </table>
+          </div>';
+             /*
+             * @Author: Satish Parmar
+             * @ purpose: This helper function use for send dynamic email template from db.
+             */
+             $template = EmailTemplate::where('name', 'resend-booking-confirmation-mail')->first();
+             $to_mail = $email;
+             $to_name = $name;
+             $view_params = [
+                 'name'=>$name, 
+                 'email'=>$email,
+                 'content' => $content,
+                 'base_url' => url('/'),
+                 'SupplierLogin_url' => url('/supplier-login')
+             ];
+             // in DB Html bind data like {{firstname}}
+             send_mail_dynamic($to_mail,$to_name,$template,$view_params);
+   
+             /* @author:Satish Parmar EndCode */
+        
+             return Response::json(["success"=>"Booking Confirmation mail send Successfully."]);
+            }
+            return Response::json(["error"=>"something went wrong."]);
+     }
+ 
 }

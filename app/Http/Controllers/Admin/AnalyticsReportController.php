@@ -65,7 +65,8 @@ class AnalyticsReportController extends CrudController
         $supplier_services_inquirey = [];
         $supplier_services_mobile_view = [];
         $supplier_services_email_view = [];
-        $most_viewed_image = [];
+        $supplier_services_viewed_photos = [];
+       
         if(count($Supplier_services)){            
 
             foreach($Supplier_services as $assign_service){
@@ -97,11 +98,58 @@ class AnalyticsReportController extends CrudController
                     //Most viewed photo-------------------
 
                     $photo_view = $this->AnalyticsAPI->get_analytics_filter("photo_view",$supplier_services_id);
-                    if(count($photo_view)){
-                        $total_viewed_photo =  count($photo_view);
-                        $viewed_image_url = $photo_view[0]->image_url;
-                    array_push($most_viewed_image,$viewed_image_url);
 
+                    $total_viewed_photo = 0;
+
+                    if(count($photo_view)){
+                        
+
+                        $supplier_services_details =  DB::table('supplier_services')
+                        ->join('analytics', 'supplier_services.id', '=', 'analytics.supplier_services_id')  
+                        ->join('customer_profile', 'analytics.customer_id', '=', 'customer_profile.id')  
+                        ->join('supplier_assign_events', 'supplier_services.id', '=', 'supplier_assign_events.supplier_services_id')                                        
+                        ->join('events', 'supplier_assign_events.event_id', '=', 'events.id')
+                        ->join('services', 'services.id', '=', 'supplier_services.service_id')
+                        ->where('supplier_services.id',$supplier_services_id)
+                        ->select('services.name as services_name','customer_profile.name as customer_name','events.name as event_name')
+                        ->first(); 
+                         
+                         $services_name = "";
+                         $customer_name = "";
+                         $event_name = "";
+
+                         if($supplier_services_details){
+                            $services_name = $supplier_services_details->services_name;
+                            $customer_name = $supplier_services_details->customer_name;
+                            $event_name = $supplier_services_details->event_name;
+                         }
+                         $total_viewed_photo = count($photo_view);
+                       
+                        
+                        $key = "slug";
+                        $temp_array = array();
+                        $i = 0;
+                        $key_array = array();
+                        foreach($photo_view  as $val) {
+                            $count = $i  + 1;
+                            if (!in_array($val->$key, $key_array)) {
+                                
+                                $key_array[$i] = $val->$key;
+                                $temp_array[$i] = $val;
+                                $photo_view_element = [
+                                                "count" => $count,
+                                                "image_url" => $val->image_url,
+                                                "customer_name" => $customer_name,
+                                                "services_name" => $services_name,
+                                                "event_name" => $event_name
+                                             ];
+                                array_push($supplier_services_viewed_photos,$photo_view_element);
+                            } 
+                            
+                            $i++;
+                        }   
+                                             
+                      
                     }else{
                         $total_viewed_photo = 0;
                     }
@@ -150,7 +198,7 @@ class AnalyticsReportController extends CrudController
         "total_enquiries"=>array_sum($supplier_services_inquirey),
         "total_viewed_mobile"=>array_sum($supplier_services_mobile_view),
         "total_viewed_email"=>array_sum($supplier_services_email_view),
-        "most_viewed_image"=>$most_viewed_image[0]
+        "supplier_services_viewed_photos" =>$supplier_services_viewed_photos
         ];
 
 

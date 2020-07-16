@@ -21,6 +21,10 @@ use App\Models\Supplier_services;
 use App\Models\Services;
 use App\Models\Events;
 use App\Models\Location;
+use App\Models\SiteDetails;
+use App\Models\PriceRange;
+use App\Models\Supplier_assign_events;
+
 
 use App\Http\Controllers\AnalyticsController;
 use App\Models\EmailTemplatesDynamic as EmailTemplate;
@@ -60,7 +64,7 @@ class supplierController extends Controller
         $getLocations = Location::get();
         $Services =  Services::orderBy('name', 'ASC')->get();
         $Events = Events::orderBy('name', 'ASC')->get();
-
+        $PriceRange = PriceRange::orderBy('status', 'ASC')->get();
         $Supplier_services = Supplier_services::where('supplier_id',$supplier_id)->get();
     
         $supplier_services_impressions = [];
@@ -237,7 +241,7 @@ class supplierController extends Controller
         ->join('events', 'supplier_assign_events.event_id', '=', 'events.id')
         ->join('services', 'services.id', '=', 'supplier_services.service_id')
         ->where('supplier_services.supplier_id',$supplier_id)
-        ->select('customer_id','customer_profile.image','supplier_services.service_id','services.name as services_name','customer_profile.name as customer_name','events.name as event_name','events.id as event_id','supplier_services.id as supplier_services_id')
+        ->select('customer_id','customer_profile.image','customer_profile.email as customer_email','supplier_services.service_id','services.name as services_name','customer_profile.name as customer_name','events.name as event_name','events.id as event_id','supplier_services.id as supplier_services_id')
        ->whereIn('customers_inquiry.id', function($query){
                     $query->selectRaw('MAX(customers_inquiry.id)')->from('customers_inquiry')->groupBy('customers_inquiry.customer_id');
                 })->orderBy('customers_inquiry.created_at','DESC')->get()
@@ -246,6 +250,8 @@ class supplierController extends Controller
         
        $getCustomerProfile = Customer::get();
 
+
+     
     // PAYMENT INFORMATION ---------------------------------------------------------------------------------------------
 
       $payment_transfer_info =  DB::table('payment_transfer_info_supplier')->where('supplier_id',$supplier_id)->first();        
@@ -263,8 +269,15 @@ class supplierController extends Controller
                                     ->join('services', 'services.id', '=', 'supplier_services.service_id')
                                     ->select('supplier_services.service_id','services.name as service_name','supplier_services.id as supplier_services_id','supplier_services.business_name')
                                     ->get();                   
+                                
 
-        return view('supplier.dashboard', ["supplier_service_details"=>$supplier_service_details,"user_details" => $user,'locations' => $getLocations,'Services'=>$Services,'Events'=>$Events,"booking"=>$booking,"payment_details"=>$payment_details,"customers"=>$customers,"CustomerProfile"=>[],"Analytic_record"=>$Analytic_record,"payment_transfer_info"=>$payment_transfer_info]);
+                                    $currency_symbol = "";
+                                    $SiteDetails =  SiteDetails::get()->first();
+                                    if($SiteDetails){
+                                        $currency_symbol = $SiteDetails->currency_symbol;
+                                    }
+
+        return view('supplier.dashboard', ["PriceRange"=>$PriceRange,"currency_symbol"=>$currency_symbol,"supplier_service_details"=>$supplier_service_details,"customer_email_list"=>$getCustomerProfile, "user_details" => $user,'locations' => $getLocations,'Services'=>$Services,'Events'=>$Events,"booking"=>$booking,"payment_details"=>$payment_details,"customers"=>$customers,"CustomerProfile"=>[],"Analytic_record"=>$Analytic_record,"payment_transfer_info"=>$payment_transfer_info]);
      }
 
     public function account()
@@ -275,7 +288,6 @@ class supplierController extends Controller
 
     public function account_edit(Request $request)
     {   
-
         $user_id = $this->getUserID();
         $data = [];
 
@@ -653,6 +665,60 @@ class supplierController extends Controller
                }
                 return Response::json(["error"=>"The Payment Details  cannot be Saved."]);
         }
+
+
+        public function AddSupplierServices(Request $request)
+        {
+          // dd($request->all());
+              
+                $Result = $request;
+                $supplier_id = $Result->supplier_id;
+                $business_name = $Result->business_name;
+                $service_description = $Result->service_description;
+                $facebook_link  = $Result->facebook_link;
+                $instagram_link = $Result->instagram_link;
+                $price_range = $Result->price_range;
+                $location = $Result->location;
+                $event_ids = $Result->event_id;
+                $service_id = $Result->service_id;
+                
+                $supplier_services_data = [ 
+                   'supplier_id'=>$supplier_id,
+                   'service_id'=>$service_id,
+                   'business_name'=>$business_name,
+                   'service_description'=>$service_description,
+                   'facebook_title' => "Facebook",
+                   'facebook_link'=>$facebook_link,
+                   'instagram_title' =>"Instagram",
+                   'instagram_link'=>$instagram_link,
+                   'location'=>$location,
+                   'price_range'=>$price_range,
+                   'status'=>'Active',
+                   'created_at' => date('Y-m-d H:i:s'),
+                   'updated_at' => date('Y-m-d H:i:s')
+                ];
+           
+              $supplier_assign_events =  Supplier_services::create($supplier_services_data);
+
+               if($supplier_assign_events && $event_ids){
+                   foreach ($event_ids as $event_id){
+                       $supplier_assign_category_id =  $supplier_assign_events->id;
+                       Supplier_assign_events::create(['supplier_services_id'=>$supplier_assign_category_id,'event_id'=>$event_id]);
+                   }
+               }
+              
+                if($supplier_assign_events){
+                   return Response::json(["success"=>"Supplier service Added Successfully."]);
+               }
+                return Response::json(["error"=>"Supplier service Added failed."]);
+        }
+
+
+
+
+
+
+
 }
 
 

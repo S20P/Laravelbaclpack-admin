@@ -237,11 +237,29 @@ position: absolute;
          </div>
       </div>
       
-
-  <h2 class="gradient-pink-text">Most viewed Image</h2>
-  <div>
-    <img src="" id="most_viewed_image" width="400px">
-  </div>
+      <div class="row justify-content-center">
+         <div class="col-md-12">
+         <h2 class="gradient-pink-text">Supplier Services viewed Image</h2>
+            <div class="event-service">
+               <div class="table-responsive">
+                  <table class="table" >
+                     <thead>
+                        <tr>
+                           <th class="" scope="col">Total</th>
+                           <th class="" scope="col">Most viewed Image</th>
+                           <!-- <th class="" scope="col">Customer</th> -->
+                           <th class="" scope="col">Supplier Service</th>
+                           <th class="" scope="col">Event</th>
+                        </tr>
+                     </thead>
+                     <tbody id="supplier_services_viewed_photos_crud">
+                
+                     </tbody>
+                  </table>    
+               </div>
+            </div>
+          </div>
+      </div>
     
 
    </div>
@@ -307,11 +325,25 @@ $('#most_viewed_image').attr("src","");
  $('#total_viewed_mobile').text(data.html.total_viewed_mobile);
  $('#total_viewed_photo').text(data.html.total_viewed_photo); 
 
- $('#most_viewed_image').attr("src",data.html.most_viewed_image); 
+  var most_viewed_image = data.html.supplier_services_viewed_photos; 
 
 
+ if(most_viewed_image.length>0){
+			var ViewedImagesData = "";
+		
+			for(var i=0;i<most_viewed_image.length;i++){
+			
 
-                   
+            ViewedImagesData += '<tr><td>' + most_viewed_image[i].count + '</td><td><img src="'+most_viewed_image[i].image_url+'" id="most_viewed_image" width="200px"></td><td>'+most_viewed_image[i].services_name+'</td><td>'+most_viewed_image[i].event_name+'</td>';
+            ViewedImagesData += '</tr>';
+		  
+			}
+			$("#supplier_services_viewed_photos_crud").html(ViewedImagesData);
+		  
+		  } else{
+			$("#supplier_services_viewed_photos_crud").html('<tr><td colspan="6"><p class="text-danger">Not found.</p></td></tr>');
+		  }
+                 
                   }
                   $('#generate_report').removeAttr('disabled');
                   $('.template_loader').hide();

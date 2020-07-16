@@ -20,7 +20,8 @@ img#home-layer-3 {
 }
 
 #home-layer-5 {
-	top: 62%;
+	/* top: 62%; */
+	top: 70%;
 	right: 52%;
 	z-index: 1
 }

@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Supplier_services;
 use App\Models\Supplier_assign_events;
 use App\Models\EmailTemplatesDynamic as EmailTemplate;
+use Exception;
+use Auth;
+use App\Models\Customer;
 
 class MoneySetupController extends Controller
 {
@@ -23,6 +26,7 @@ class MoneySetupController extends Controller
     }
     public function postPaymentStripe(Request $request)
     {
+        
         // dd($request->all());
         $site = getFooterDetails();
         if(isset($request->service_id) && isset($site) &&  $site != ''){
@@ -37,7 +41,10 @@ class MoneySetupController extends Controller
             //    	->select('services.name as service_name','supplier_profile.name as supplier_name','supplier_profile.email as supplier_email','supplier_services.*')
             //     ->first();
                
+            try {
             Stripe\Stripe::setApiKey($site->stripe_secret);
+
+
             $plan = Stripe\Plan::create(array(
                 "product" => [
                     "name" => $request->payer_name.'-'.$service_name,
@@ -64,6 +71,8 @@ class MoneySetupController extends Controller
             ));
             $array_response = $subscription->jsonSerialize();
             $json_response = json_encode($array_response,true);
+
+            
             if ($subscription['status'] == 'active')
             {
                 $totalLocation = count($request->location);
@@ -168,8 +177,42 @@ class MoneySetupController extends Controller
             }
             else
             {
-                return redirect('payerror');
+                return redirect()->route('payerror');
             }
+
+
+        } catch(\Stripe\Exception\CardException $e) {
+
+            return redirect()->route('payerror');
+            
+            // Since it's a decline, \Stripe\Exception\CardException will be caught
+            // echo 'Status is:' . $e->getHttpStatus() . '\n';
+            // echo 'Type is:' . $e->getError()->type . '\n';
+            // echo 'Code is:' . $e->getError()->code . '\n';
+            // // param is '' in this case
+            // echo 'Param is:' . $e->getError()->param . '\n';
+            // echo 'Message is:' . $e->getError()->message . '\n';
+          } catch (\Stripe\Exception\RateLimitException $e) {
+            return redirect()->route('payerror');
+            // Too many requests made to the API too quickly
+          } catch (\Stripe\Exception\InvalidRequestException $e) {
+            return redirect()->route('payerror');
+            // Invalid parameters were supplied to Stripe's API
+          } catch (\Stripe\Exception\AuthenticationException $e) {
+            return redirect()->route('payerror');
+            // Authentication with Stripe's API failed
+            // (maybe you changed API keys recently)
+          } catch (\Stripe\Exception\ApiConnectionException $e) {
+            return redirect()->route('payerror');
+            // Network communication with Stripe failed
+          } catch (\Stripe\Exception\ApiErrorException $e) {
+            return redirect()->route('payerror');
+            // Display a very generic error to the user, and maybe send
+            // yourself an email
+          } catch (Exception $e) {
+            return redirect()->route('payerror');
+            // Something else happened, completely unrelated to Stripe
+          }
 
         } elseif(isset($request->booking_id) && isset($site) &&  $site != ''){
             $getBooking =  DB::table('supplier_services')
@@ -184,143 +227,186 @@ class MoneySetupController extends Controller
                 
             // $admin_data = DB::table('customer_profile')->select('customer_profile.user_id')->where('customer_profile.id',$request->customer_id)->first();
 //            $admin_email_get = DB::table('users')->select('name','email')->where('id',$admin_data->user_id)->first();
-            Stripe\Stripe::setApiKey($site->stripe_secret);
-            $customer = Stripe\Customer::create([
-                'email' => $request->customer_email,
-                'source' => $request->stripeToken,
-                'name' => $request->payer_name,
-            ]);
-            $charge = Stripe\Charge::create([
-                "amount" => $request->booking_amount * 100,
-                "currency" => $site->currency_code,
-                "customer" =>$customer->id,
-                "description" => "Test payment from PartyPerfect.com."
-            ]);
-            $getBooking = (array) $getBooking;
-            $array_response = $charge->jsonSerialize();
-            $json_response = json_encode($array_response,true);
-            if ($charge['status'] == 'succeeded')
-            {
-                $pay_id = DB::table('payment')
-                    ->insertGetId(array(
-                        'booking_id' => $request->booking_id,
-                        'supplier_id' => $getBooking['supplier_id'],
-                        'amount' => $request->booking_amount,
-                        'payment_date' => date('Y-m-d H:i:s'),
-                        "payment_status" =>  $charge['status'],
-                        "response" => $json_response,
-                        "created_at" => date('Y-m-d H:i:s'), # new \Datetime()
-                        "updated_at" => date('Y-m-d H:i:s'),  # new \Datetime()
-                    ));
-                $update_data = DB::table('booking')->where('id', $request->booking_id)->update(['status' => 1]);
-                $supplier_name = $getBooking['name'];
-                $supplier_email = $getBooking['email'];
-                $admin_name = 'Admin';
-                $admin_email = $site->contact_email;
-                $customer_name = $request->customer_name;
-                $customer_email = $request->customer_email;
-                $data_supplier = array(
-                    'cname'=> $customer_name,
-                    'type' => 'suppliers',
-                    'sname'=> $supplier_name,
-                );
-                $data_admin = array(
-                    'cname'=> $customer_name,
-                    'type' => 'admin',
-                    'sname'=> $supplier_name,
-                );
-                $data_customer = array(
-                  "getBooking"  => $getBooking,
-                  "type" => "customers",
-                  'sname'=> $supplier_name,
-                );
-                view()->share('getBooking',$getBooking);
-                $pdf = PDF::loadView('emails.Order_Complete_User');
-                if($pay_id){
-                    // Mail::send("emails.Order_Complete",$data_customer, function($message) use ($customer_name, $customer_email, $supplier_name, $pdf)
-                    // {
-                    //     $message->to($customer_email, $customer_name)->subject($supplier_name.' Payment Complete')->attachData($pdf->output(), "invoice.pdf");
-                    // });
-                    // Mail::send("emails.Order_Complete",$data_supplier, function($message) use ($supplier_name, $supplier_email, $pdf)
-                    // {
-                    //     $message->to($supplier_email, $supplier_name)->subject('Party Perfect Payment Complete')->attachData($pdf->output(), "invoice.pdf");
-                    // });
-                    // Mail::send("emails.Order_Complete",$data_admin, function($message) use ($admin_name, $admin_email, $pdf)
-                    // {
-                    //     $message->to($admin_email, $admin_name)->subject('Payment complete')->attachData($pdf->output(), "invoice.pdf");
-                    // });
 
+         //return redirect()->route('payerror-booking',["booking_id"=>$request->booking_id]);
 
-        // Order_Complete type  customers---------------------------
-                    /*
-                    * @Author: Satish Parmar
-                    * @ purpose: This helper function use for send dynamic email template from db.
-                    */
-                    $template = EmailTemplate::where('name', 'Order-Complete-Customers')->first();
-                    $to_mail = $customer_email;
-                    $to_name = $customer_name;
-                    $view_params = [    
-                        'sname'=> $supplier_name,
-                        'base_url' => url('/'),
-                    ];
-                    // in DB Html bind data like {{firstname}}
-                    send_mail_dynamic($to_mail,$to_name,$template,$view_params,$pdf->output(), "invoice.pdf");
+            try {
 
-                /* @author:Satish Parmar EndCode */
+              //  dd("TRY");
+                Stripe\Stripe::setApiKey($site->stripe_secret);
+                $customer = Stripe\Customer::create([
+                    'email' => $request->customer_email,
+                    'source' => $request->stripeToken,
+                    'name' => $request->payer_name,
+                ]);
+                // Use Stripe's library to make requests...
 
-        // Order_Complete type  customers end---------------------------
-
-
-        // Order_Complete type  suppliers---------------------------
-                    /*
-                    * @Author: Satish Parmar
-                    * @ purpose: This helper function use for send dynamic email template from db.
-                    */
-                    $template = EmailTemplate::where('name', 'Order-Complete-Suppliers')->first();
-                    $to_mail = $supplier_email;
-                    $to_name = $supplier_name;
-                    $view_params = [    
+                $charge = Stripe\Charge::create([
+                    "amount" => $request->booking_amount * 100,
+                    "currency" => $site->currency_code,
+                    "customer" =>$customer->id,
+                    "description" => "Test payment from PartyPerfect.com."
+                ]);
+                
+                $getBooking = (array) $getBooking;
+                $array_response = $charge->jsonSerialize();
+                $json_response = json_encode($array_response,true);
+                if ($charge['status'] == 'succeeded')
+                {
+                    $pay_id = DB::table('payment')
+                        ->insertGetId(array(
+                            'booking_id' => $request->booking_id,
+                            'supplier_id' => $getBooking['supplier_id'],
+                            'amount' => $request->booking_amount,
+                            'payment_date' => date('Y-m-d H:i:s'),
+                            "payment_status" =>  $charge['status'],
+                            "response" => $json_response,
+                            "created_at" => date('Y-m-d H:i:s'), # new \Datetime()
+                            "updated_at" => date('Y-m-d H:i:s'),  # new \Datetime()
+                        ));
+                    $update_data = DB::table('booking')->where('id', $request->booking_id)->update(['status' => "complete"]);
+                    $supplier_name = $getBooking['name'];
+                    $supplier_email = $getBooking['email'];
+                    $admin_name = 'Admin';
+                    $admin_email = $site->contact_email;
+                    $customer_name = $request->customer_name;
+                    $customer_email = $request->customer_email;
+                    $data_supplier = array(
                         'cname'=> $customer_name,
-                        'base_url' => url('/'),
-                    ];
-                    // in DB Html bind data like {{firstname}}
-                    send_mail_dynamic($to_mail,$to_name,$template,$view_params,$pdf->output(), "invoice.pdf");
-
-                /* @author:Satish Parmar EndCode */
-
-        // Order_Complete type  suppliers end---------------------------
-        
-         // Order_Complete type  admin---------------------------
+                        'type' => 'suppliers',
+                        'sname'=> $supplier_name,
+                    );
+                    $data_admin = array(
+                        'cname'=> $customer_name,
+                        'type' => 'admin',
+                        'sname'=> $supplier_name,
+                    );
+                    $data_customer = array(
+                      "getBooking"  => $getBooking,
+                      "type" => "customers",
+                      'sname'=> $supplier_name,
+                    );
+                    view()->share('getBooking',$getBooking);
+                    $pdf = PDF::loadView('emails.Order_Complete_User');
+                    if($pay_id){
+                        // Mail::send("emails.Order_Complete",$data_customer, function($message) use ($customer_name, $customer_email, $supplier_name, $pdf)
+                        // {
+                        //     $message->to($customer_email, $customer_name)->subject($supplier_name.' Payment Complete')->attachData($pdf->output(), "invoice.pdf");
+                        // });
+                        // Mail::send("emails.Order_Complete",$data_supplier, function($message) use ($supplier_name, $supplier_email, $pdf)
+                        // {
+                        //     $message->to($supplier_email, $supplier_name)->subject('Party Perfect Payment Complete')->attachData($pdf->output(), "invoice.pdf");
+                        // });
+                        // Mail::send("emails.Order_Complete",$data_admin, function($message) use ($admin_name, $admin_email, $pdf)
+                        // {
+                        //     $message->to($admin_email, $admin_name)->subject('Payment complete')->attachData($pdf->output(), "invoice.pdf");
+                        // });
+    
+    
+            // Order_Complete type  customers---------------------------
                         /*
                         * @Author: Satish Parmar
                         * @ purpose: This helper function use for send dynamic email template from db.
                         */
-                        $template = EmailTemplate::where('name', 'Order-Complete-Admin')->first();
-                        $to_mail = $admin_email;
-                        $to_name = $admin_name;
+                        $template = EmailTemplate::where('name', 'Order-Complete-Customers')->first();
+                        $to_mail = $customer_email;
+                        $to_name = $customer_name;
                         $view_params = [    
-                            'cname'=> $customer_name,
                             'sname'=> $supplier_name,
                             'base_url' => url('/'),
                         ];
                         // in DB Html bind data like {{firstname}}
                         send_mail_dynamic($to_mail,$to_name,$template,$view_params,$pdf->output(), "invoice.pdf");
-
+    
                     /* @author:Satish Parmar EndCode */
-
-            // Order_Complete type  admin end---------------------------
-
-
+    
+            // Order_Complete type  customers end---------------------------
+    
+    
+            // Order_Complete type  suppliers---------------------------
+                        /*
+                        * @Author: Satish Parmar
+                        * @ purpose: This helper function use for send dynamic email template from db.
+                        */
+                        $template = EmailTemplate::where('name', 'Order-Complete-Suppliers')->first();
+                        $to_mail = $supplier_email;
+                        $to_name = $supplier_name;
+                        $view_params = [    
+                            'cname'=> $customer_name,
+                            'base_url' => url('/'),
+                        ];
+                        // in DB Html bind data like {{firstname}}
+                        send_mail_dynamic($to_mail,$to_name,$template,$view_params,$pdf->output(), "invoice.pdf");
+    
+                    /* @author:Satish Parmar EndCode */
+    
+            // Order_Complete type  suppliers end---------------------------
+            
+             // Order_Complete type  admin---------------------------
+                            /*
+                            * @Author: Satish Parmar
+                            * @ purpose: This helper function use for send dynamic email template from db.
+                            */
+                            $template = EmailTemplate::where('name', 'Order-Complete-Admin')->first();
+                            $to_mail = $admin_email;
+                            $to_name = $admin_name;
+                            $view_params = [    
+                                'cname'=> $customer_name,
+                                'sname'=> $supplier_name,
+                                'base_url' => url('/'),
+                            ];
+                            // in DB Html bind data like {{firstname}}
+                            send_mail_dynamic($to_mail,$to_name,$template,$view_params,$pdf->output(), "invoice.pdf");
+    
+                        /* @author:Satish Parmar EndCode */
+    
+                // Order_Complete type  admin end---------------------------
+    
+    
+                    }
+                    return redirect()->route('thankyou');
                 }
-                return redirect('thankyou');
-            }
-            else
-            {
-                return redirect('payerror');
-            }
+                else
+                {
+                    return view('PaymentFailedBooking',["booking_id"=>$request->booking_id]);
+                }
+
+
+              } catch(\Stripe\Exception\CardException $e) {
+
+                return view('PaymentFailedBooking',["booking_id"=>$request->booking_id]);
+                
+                // Since it's a decline, \Stripe\Exception\CardException will be caught
+                // echo 'Status is:' . $e->getHttpStatus() . '\n';
+                // echo 'Type is:' . $e->getError()->type . '\n';
+                // echo 'Code is:' . $e->getError()->code . '\n';
+                // // param is '' in this case
+                // echo 'Param is:' . $e->getError()->param . '\n';
+                // echo 'Message is:' . $e->getError()->message . '\n';
+              } catch (\Stripe\Exception\RateLimitException $e) {
+                return view('PaymentFailedBooking',["booking_id"=>$request->booking_id]);
+                // Too many requests made to the API too quickly
+              } catch (\Stripe\Exception\InvalidRequestException $e) {
+                return view('PaymentFailedBooking',["booking_id"=>$request->booking_id]);
+                // Invalid parameters were supplied to Stripe's API
+              } catch (\Stripe\Exception\AuthenticationException $e) {
+                return view('PaymentFailedBooking',["booking_id"=>$request->booking_id]);
+                // Authentication with Stripe's API failed
+                // (maybe you changed API keys recently)
+              } catch (\Stripe\Exception\ApiConnectionException $e) {
+                return view('PaymentFailedBooking',["booking_id"=>$request->booking_id]);
+                // Network communication with Stripe failed
+              } catch (\Stripe\Exception\ApiErrorException $e) {
+                return view('PaymentFailedBooking',["booking_id"=>$request->booking_id]);
+                // Display a very generic error to the user, and maybe send
+                // yourself an email
+              } catch (Exception $e) {
+                return view('PaymentFailedBooking',["booking_id"=>$request->booking_id]);
+                // Something else happened, completely unrelated to Stripe
+              }
         }
         else{
-            return redirect('payerror');
+            return view('PaymentFailedBooking',["booking_id"=>$request->booking_id]);
         }
     }
     public function getDetails(){
@@ -373,5 +459,5 @@ class MoneySetupController extends Controller
     	
         // dd($request->all());
     }
-
+   
 }

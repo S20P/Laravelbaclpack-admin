@@ -148,8 +148,8 @@ if (! function_exists('getEventName')) {
 function get_instagram(){
 	$site = getFooterDetails();
     $result = array();
-    $url = 'https://api.instagram.com/v1/users/'.$site->instagram_user_id.'/media/recent/?access_token='.$site->instagram_secret.'&count='.$site->number_of_feeds;
-    // Also Perhaps you should cache the results as the instagram API is slow
+    // $url = 'https://api.instagram.com/v1/users/'.$site->instagram_user_id.'/media/recent/?access_token='.$site->instagram_secret.'&count='.$site->number_of_feeds;
+    // // Also Perhaps you should cache the results as the instagram API is slow
   
   
     // $cache = './'.sha1($url).'.json';

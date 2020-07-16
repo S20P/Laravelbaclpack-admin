@@ -22,7 +22,7 @@ class Articles extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    protected $fillable = ['category_id','title','slug','date','quote','content','short_content','column1_image','column1_title','column1_description','column2_image','column2_title','column2_description','banner_image','media_type','image','video','status','author','featured'];
+    protected $fillable = ['category_id','title','slug','date','quote','content','short_content','column1_image','column1_title','column1_description','column2_image','column2_title','column2_description','banner_image','media_type','image','video','status','author','featured','filter_by'];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -41,7 +41,6 @@ class Articles extends Model
     |--------------------------------------------------------------------------
     */
 
-  
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

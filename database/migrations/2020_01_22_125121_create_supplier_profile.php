@@ -20,6 +20,8 @@ class CreateSupplierProfile extends Migration
                 $table->string('name')->nullable();
                 $table->string('email')->nullable();
                 $table->string('phone')->nullable();
+                $table->string('address')->nullable();
+                $table->string('city')->nullable();
                 $table->string('image')->nullable()->default('/images/avtar.png');
                 $table->enum('status', ['Approved', 'Disapproved'])->default('Disapproved');
                 $table->string('password')->nullable();

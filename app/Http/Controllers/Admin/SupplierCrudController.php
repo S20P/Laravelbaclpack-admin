@@ -17,6 +17,8 @@ use DB;
 use Auth;   
 use Hash;
 use Mail;
+use App\Models\Location;
+
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\EmailTemplatesDynamic as EmailTemplate;
@@ -67,7 +69,7 @@ class SupplierCrudController extends CrudController
          'function_name' => 'thumbnail_image',
          'limit' => 1000,
         ],
-        'name','email','phone','status',
+        'name','email','phone','address','city','status',
         [
             'label'     => 'TYPE OF SERVICE', // Table column heading
             'name'      => 'service_name', // the column that contains the ID of that connected entity;
@@ -84,13 +86,12 @@ class SupplierCrudController extends CrudController
         //     'limit'=> 1000,
         // ],
        ]);
-
-     
+    
 
       //  $this->crud->setFromDb();
         $this->crud->removeColumn('user_id');
         $this->addCustomCrudFilters();
-$this->crud->setDetailsRowView('crud::details_row.supplier');
+        $this->crud->setDetailsRowView('crud::details_row.supplier');
         $this->crud->enableExportButtons();
     }
 
@@ -159,6 +160,21 @@ $supplier =  DB::table("supplier_profile")->where('id',$id)->first();
             // 'tab' => 'Supplier profile information',
         ]);
 
+
+        $this->crud->addField([ 
+            'name' => 'city',
+            'label' => "City",
+            'type' => 'select2_from_array',
+            'options' =>$this->getTypeOfCity(),
+            'allows_null' => false,
+        ]);
+
+        $this->crud->addField([
+            'name'           => 'address',
+            'type'           => 'textarea',
+            'label'          => 'Address',
+        ]);
+
         $this->crud->addField([
             'name'           => 'image',
             'type'           => 'upload',
@@ -201,7 +217,6 @@ $supplier =  DB::table("supplier_profile")->where('id',$id)->first();
             'label'          => 'Business name',
             'fake' => true,
             // 'tab' => 'Supplier Service information',            
-
         ]);
 
         $this->crud->addField([
@@ -210,7 +225,6 @@ $supplier =  DB::table("supplier_profile")->where('id',$id)->first();
             'label'          => 'Service description',
             'fake' => true,
             // 'tab' => 'Supplier Service information',            
-
         ]);
 
         $this->crud->addField([ 
@@ -423,6 +437,16 @@ $supplier =  DB::table("supplier_profile")->where('id',$id)->first();
 
     }
 
+
+    public function getTypeOfCity(){
+        $services = [];
+        $results = Location::get();
+       foreach($results as $item){
+           $services[$item->location_name] = $item->location_name;
+       }
+        return $services;
+     }
+
     public function getTypeOfService(){
        $services = [];
        $results = Services::get();
@@ -631,6 +655,20 @@ $supplier =  DB::table("supplier_profile")->where('id',$id)->first();
             // 'fake' => true,
         ]);
 
+        $this->crud->addField([
+            'name'           => 'address',
+            'type'           => 'textarea',
+            'label'          => 'Address',
+        ]);
+
+        $this->crud->addField([ 
+            'name' => 'city',
+            'label' => "City",
+            'type' => 'select2_from_array',
+            'options' =>$this->getTypeOfCity(),
+            'allows_null' => false,
+        ]);
+
          $this->crud->addField([
             'name'           => 'status',
             'type'           => 'radio',
@@ -724,10 +762,10 @@ $this->crud->addField([
 
 
 $this->crud->addField([
-    'name'           => 'password',
+    'name'           => 'password_new',
     'type'           => 'password',
     'label'          => 'Password',
-    // 'fake' => true,
+     'fake' => true,
      'tab' => 'Reset Password',
 ]);
 
@@ -746,6 +784,8 @@ $this->crud->addField([
           // $this->crud->setFromDb();
        $this->crud->removeField('user_id');
        $this->crud->removeField('password_string');
+       $this->crud->removeField('password');
+
     }
 
 
@@ -789,15 +829,12 @@ $this->crud->addField([
           
      
         // Reset Password by admin
-        $password = $Result->password;
-    
+        $password = $Result->password_new;
 
         if($password && !empty($password) && $password !== "" && $password !== null){
             
-
-           
             $update_approved_status = DB::table('supplier_profile')->where('id',$id)->update([
-                'password'=>Hash::make($password),
+                 'password'=>Hash::make($password),
                  'password_string' => $password
               ]);
 
@@ -960,8 +997,7 @@ $this->crud->addField([
       $this->crud->query = $this->crud->query->whereHas('supplier_services', function ($query) use ($value) {
         $query->where('service_id', $value);
     });
-
-      });
+   });
 
 
  $this->crud->addFilter([

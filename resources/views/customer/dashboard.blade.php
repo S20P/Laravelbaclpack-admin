@@ -21,12 +21,12 @@
                                       @csrf
                                     <div class="account-input">
                                         <input id="email" type="email" class="@error('email') is-invalid @enderror change_email" disabled name="email" value="{{ old('email',$user_details['email']) }}"  required autocomplete="email" placeholder="contact@company.ie">
-                                        <button class="btn common-btn" id="account_email_edit" type="button">
+                                        <!-- <button class="btn common-btn" id="account_email_edit" type="button">
                                            <i class="fal fa-edit"></i> EDIT
                                         </button>
                                         <button class="btn common-btn hide" id="account_email_save" type="submit">
                                             <i class="fal fa-check"></i> SAVE
-                                        </button>
+                                        </button> -->
                                     </div>
                                     </form>
                                 </div>
@@ -41,8 +41,9 @@
                                 <div class="list-accordion-content-box">
                                 <form method="POST" name="customer_account_change_password_form" id="customer_account_change_password_form">
                                       @csrf
-                                    <div class="account-input">
-                                        <input id="password" type="password" disabled class="@error('password') is-invalid @enderror" name="password">
+                                      <div class="account-input row password_section">
+                                        <input id="password" type="password" disabled class="@error('password') is-invalid @enderror" name="password" placeholder="Your Password">
+                                        <input id="password-confirm" type="password" disabled class="cus_con_pass col-md-12" name="password_confirmation" placeholder="Your Confirm Password" required autocomplete="new-password">
                                         <button class="btn common-btn hide" id="account_pass_save" type="submit">
                                            <i class="fal fa-check"></i> SAVE
                                         </button>

@@ -474,6 +474,8 @@
         margin-bottom: 15px
     }
 
+    footer .filter_search .search-field-custom{width: 100%;}
+
     .search-field-custom.filter-btn {
         width: 100%;
         padding: 0;
@@ -808,8 +810,8 @@
     }
 
     footer {
-        padding: 120px 0 40px;
-        margin-top: -90px
+        padding: 180px 0 40px;
+        margin-top: 0px
     }
 
     .event-service {
@@ -964,7 +966,8 @@
     }
 
     .featured-vendors {
-        padding: 0 0 0
+        padding: 0 0 0;
+      margin-top: 50px;
     }
 
     .featured-vendors:before {
@@ -1928,7 +1931,7 @@
     .leave-review p input {
         text-align: center;
         margin-bottom: 10px;
-        font-size: 18px
+        font-size: 12px
     }
 
     .rate:not(:checked) > label {
@@ -2241,6 +2244,8 @@
 */
     #our-suppliers-block {
         margin-top: 50px;
+        z-index: 0;
+        overflow: hidden;
     }
 
     .FrontEnd_pages_OurSuppliers .home-page-banner .col-sm-12:before {

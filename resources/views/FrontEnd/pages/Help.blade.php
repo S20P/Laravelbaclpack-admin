@@ -48,9 +48,9 @@
 				<section>
 					<div class="container">
 						<div class="row">
-							<div class="col-sm-12 col-md-8">
+							<div class="col-sm-12 col-md-12 help-block">
 								@if(isset($pagecontent))
-									<div class="d-none d-md-block help-title">
+									<div class="d-none d-md-block help-title text-center">
 									<h2>{{$pagecontent->title}}</h2>
 									<p>@php echo $pagecontent->content;  @endphp</p>
 									</div>
@@ -97,14 +97,14 @@
 
 
 						</div>
-						<div class="col-sm-4 col-md-4">
+<!-- 						<div class="col-sm-4 col-md-4">
 							<div class="sidebar-block planning-block">
 								<div class="title-block">
 									<h2>Chat with us!</h2>
 									<a href="#" data-api="smartsupp" data-operation="send" id="chat_box" class="sidebar-drop-btn"><i class="far fa-chevron-down"></i></a> 
 								</div>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</section>

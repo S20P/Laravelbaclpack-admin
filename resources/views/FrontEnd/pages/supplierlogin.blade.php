@@ -5,7 +5,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <h2>login</h2>
+        <h2>Suppliers Login</h2>
         <form method="POST" class="supplierprofilelogin" name="supplierprofilelogin" aria-label="{{ __('Login') }}">
           @csrf
           <input type="hidden" name="profile_type" value="supplier">

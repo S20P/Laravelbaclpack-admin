@@ -34,6 +34,7 @@ class CreateArticlesTable extends Migration
             $table->date('date')->nullable();
             $table->string('author')->nullable();
             $table->boolean('featured')->default(0);
+            $table->string('filter_by')->default('all');
             $table->timestamps();
             $table->softDeletes();
         });

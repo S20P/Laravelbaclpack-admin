@@ -112,10 +112,10 @@
 
   <script type="text/javascript">
     $(function() {
-      var $form         = $(".require-validation");
+      var $form    = $(".require-validation");
       $('form.require-validation').bind('submit', function(e) {
         $('.submit-button').attr('disabled','disabled');
-        var $form         = $(".require-validation"),
+        var $form  = $(".require-validation"),
                 inputSelector = ['input[type=email]', 'input[type=password]',
                   'input[type=text]', 'input[type=file]', 'input[type=number]',
                   'textarea'].join(', '),

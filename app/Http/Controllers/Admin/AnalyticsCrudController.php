@@ -26,7 +26,6 @@ class AnalyticsCrudController extends CrudController
         $this->crud->setModel('App\Models\Analytics');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/analytics');
         $this->crud->setEntityNameStrings('analytics', 'Analytics logs');
-       
     }
 
     protected function setupListOperation()
@@ -73,6 +72,8 @@ class AnalyticsCrudController extends CrudController
             'format' => 'DD-MM-YYYY'
          ],
        ]);
+
+       $this->addCustomCrudFilters();
     }
 
         public function show($id)
@@ -138,6 +139,40 @@ class AnalyticsCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+    public function addCustomCrudFilters()
+    {
+        $this->crud->addFilter([ // select2 filter
+            'name' => 'service_id',
+            'type' => 'select2',
+            'label'=> 'Service'
+          ], function() {
+              return \App\Models\Services::all()->pluck('name', 'id')->toArray();
+          }, function($value) { 
+    
+            $this->crud->addClause('join', 'supplier_services', function($query) use($value) {  
+                // join with function
+                $query->on('supplier_services.id', '=', 'analytics.supplier_services_id')
+                ->join('services','services.id', '=', 'supplier_services.service_id')
+                       ->where('service_id', $value);
+});
+$this->crud->addClause('select', 'analytics.*');
 
-     
+
+
+       });
+
+       $this->crud->addFilter([
+        'name' => 'customer_id',
+        //'type' => 'select2_multiple',
+        'type' => 'select2',
+        'label'=> 'Customer'
+    ], function() {
+        return \App\Models\Customer::get()->pluck('name', 'id')->toArray();
+    }, function($values) {
+        $this->crud->addClause('where', 'customer_id', $values);
+    });
+
+
+    }
+    
 }

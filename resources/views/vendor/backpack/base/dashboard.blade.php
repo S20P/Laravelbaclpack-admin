@@ -23,8 +23,14 @@
 	$myLocations = [];
 	$supplierByLocation = [];
 
+
+
+
+if(count($serviceGroup)>0){
 	foreach($serviceGroup as $locations)
 	{
+		if($locations!=null){
+
 	    foreach($locations as $location)
         {
             if(array_key_exists($location,$supplierByLocation))
@@ -37,7 +43,10 @@
             	array_push($myLocations,$location);
 	        }
         }
+		}
 	}
+}
+
 
 	$locationData = App\Models\Location::whereIn('id',$myLocations)->get();
     $supplierWidget = '';

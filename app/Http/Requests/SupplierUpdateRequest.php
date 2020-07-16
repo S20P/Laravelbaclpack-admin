@@ -30,13 +30,13 @@ class SupplierUpdateRequest extends FormRequest
             'password' => 'confirmed',
             'phone' => ['required', 'numeric'],
             'image' => ['mimes:jpeg,jpg,png,gif'],
-            'account_holder_name' => 'required',
-            'account_number' => 'required',
-            'ifsc' => 'required',
-            'bank_name' => 'required',
-            'bank_address' => 'required',
-            'iban' => 'required',
-            'sortcode' => 'required',
+            // 'account_holder_name' => 'required',
+            // 'account_number' => 'required',
+            // 'ifsc' => 'required',
+            // 'bank_name' => 'required',
+            // 'bank_address' => 'required',
+            // 'iban' => 'required',
+            // 'sortcode' => 'required',
         ];
     }
 

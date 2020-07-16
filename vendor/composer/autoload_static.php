@@ -51,6 +51,7 @@ class ComposerStaticInit4dacb6d424736f2fd18d4679eff38054
         ),
         'T' => 
         array (
+            'Torann\\LaravelMetaTags\\' => 23,
             'TijsVerkoyen\\CssToInlineStyles\\' => 31,
         ),
         'S' => 
@@ -208,6 +209,10 @@ class ComposerStaticInit4dacb6d424736f2fd18d4679eff38054
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'Torann\\LaravelMetaTags\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/torann/laravel-meta-tags/src/Torann/LaravelMetaTags',
         ),
         'TijsVerkoyen\\CssToInlineStyles\\' => 
         array (

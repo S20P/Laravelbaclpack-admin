@@ -50,6 +50,7 @@ return [
       // 'https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css',
         //'netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css',
        'https://use.fontawesome.com/releases/v5.3.1/css/all.css',
+       'css/jquery.toast.css',
         
         // Example (the fonts above, loaded from CDN instead)
         // 'https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome-font-awesome.min.css',
@@ -126,6 +127,7 @@ return [
          'https://use.fontawesome.com/b1a9dc75fb.js',
           'packages/backpack/base/js/customs.js',
           'packages/backpack/crud/js/customs.js',
+          'js/jquery.toast.js',
 
         // examples (everything inside the bundle, loaded from CDN)
         // 'https://code.jquery.com/jquery-3.4.1.min.js',

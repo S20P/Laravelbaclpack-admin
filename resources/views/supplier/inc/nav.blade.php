@@ -17,12 +17,12 @@
                 <div class="main_menu">
                     <nav>
                         <ul>
-                                <li>
+                                <!-- <li>
                                     <a href="{{ route('BrowseSuppliers') }}">BROWSE SUPPLIER</a>
                                 </li>
                                 <li>
                                     <a href="{{ route('BecomeSupplier') }}">BECOME A SUPPLIER</a>
-                                </li>
+                                </li> -->
                                 <li>
                                     <a href="{{ route('Help') }}">HELP</a>
                                 </li>
@@ -52,9 +52,9 @@
                                      <i class="fal fa-times"></i>              
                             </div>
                             <ul>
-                                <li><a href="{{ route('BrowseSuppliers') }}">BROWSE SUPPLIERS</a></li>
+                                <!-- <li><a href="{{ route('BrowseSuppliers') }}">BROWSE SUPPLIERS</a></li> -->
                                 <li><a href="{{ route('OurStory') }}">OUR STORY</a></li>
-                                <li><a href="{{route('OurSuppliers')}}">BOOK AN EVENT</a></li>
+                                <!-- <li><a href="{{route('OurSuppliers')}}">BOOK AN EVENT</a></li> -->
                                 <li><a href="{{route('Contacts')}}">CONTACTS</a></li>
                                 <li><a href="{{ route('Blog') }}">BLOG</a></li>
                                 <li><a href="{{ route('Help') }}">HELP</a></li>

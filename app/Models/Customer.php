@@ -20,8 +20,8 @@ class Customer extends Authenticatable
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    protected $fillable = ['user_id','password','name','email','phone','status','image'];   
-    protected $hidden = ['password', 'remember_token'];
+    protected $fillable = ['user_id','password','password_string','name','email','phone','status','image'];   
+    protected $hidden = ['password', 'remember_token','password_string'];
     // protected $dates = [];
 
     /*

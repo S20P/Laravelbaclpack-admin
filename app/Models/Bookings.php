@@ -101,6 +101,18 @@ class Bookings extends Model
          return ucfirst($this->status);
      }   
 
+
+     public function invoice_download()
+     {   
+
+      $action_url = route('invoice_download');
+
+      return '<a href="javascript:void(0)" data-url="'.$action_url.'" id="invoice_download" data-id="'.$this->id.'" class="btn btn-sm btn-link"> <i class="fa fa-download"></i> Download invoice</a>';
+         // return '<a data-button-type="Resend Confirmation Email" data-value="resend-email" title="Resend Confirmation Email" href="'. url('admin/supplier/resend-email/'. $this->id) .'" class="btn btn-xs btn-success">Resend Confirmation Email </a>';
+        // return  '<a  href="'. url('admin/supplier/resend-email/'. $this->id) .'" class="btn btn-sm btn-link"><i class="fa fa-paper-plane-o"></i> Resend Confirmation Email</a>';
+     }
+
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

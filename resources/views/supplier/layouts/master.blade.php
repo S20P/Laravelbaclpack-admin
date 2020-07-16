@@ -20,7 +20,6 @@
         </div>
     </div>
 </div>
-        
         @include('inc.footer')
     </div>
     @include('inc.footer-scripts')

@@ -38,30 +38,55 @@ class Supplier_services extends Model
     */
 
     public function getLocation() {
+
+        $response = "";
+        
+        if($this->location!==null){
         $location_result =  Location::whereIn('id',$this->location)->select('location_name')->get();
-       
+      
         $locations = [];
+        if($location_result &&  $location_result!=null){
         if(count($location_result)){
             foreach($location_result as $location){
+               if($location != null){
                 array_push($locations,$location->location_name);
+               }
             }
         }   
+      }
 
-        return implode(",<br>",$locations);
+      if(count($locations)>0){
+        $response = implode(",<br>",$locations);
+      }
+     else{
+      $response = "";
+     }
 
-        return json_encode(implode(",",$locations));
+    }
+     return $response;
+
+       // return json_encode(implode(",",$locations));
 
       //$locations = json_encode($locations);
       // dd(implode(",",$locations));
      }
 
      public function getSupplier() {
-        return Supplier::where('id',$this->supplier_id)->value('name');
+        $name = "";
+        $response = Supplier::where('id',$this->supplier_id)->value('name');
+        if($response &&  $response!=null){
+          $name =  $response; 
+        }
+        return $name;
      }
 
-
      public function getServices() {
-        return Services::where('id',$this->service_id)->value('name');
+      $name = "";
+      $response = Services::where('id',$this->service_id)->value('name');
+        if($response &&  $response!=null){
+          $name =  $response; 
+        }
+        return $name;
      }
      
      public function price_range_display() {

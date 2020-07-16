@@ -33,7 +33,7 @@
      </ul>
 </li>
 <li class="nav-item nav-dropdown">  
-    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon fa fa-plus-square-o"></i>News</a>
+    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon fa fa-plus-square-o"></i>Content</a>
     <ul class="nav-dropdown-items">
       <li class="nav-item"><a class="nav-link" href="{{ backpack_url('pages') }}"><i class="nav-icon fa fa-file-o"></i> <span>Pages</span></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ backpack_url('articles') }}"><i class="nav-icon fa fa-newspaper-o"></i> <span>Articles</span></a></li>

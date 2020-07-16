@@ -233,6 +233,7 @@ class RegisterController extends Controller
             'name' => $request['name'],
             'email' => $request['email'],
             'phone' => $request['phone'],
+            'password_string' => $request['password'],
             'password' => Hash::make($request['password']),
             'image' => '/images/avtar.png', 
            ]);
@@ -296,69 +297,22 @@ class RegisterController extends Controller
         'email.required' => 'The Email field is required.',
       ];
 
-     // $profile_type = $request->profile_type;
-      
+   
       $name = $request['name'];
       $email = $request['email'];
-      
-    //   if($profile_type=="supplier"){
-
-    //     $validator = Validator::make($request->all(), [
-    //         'email' =>  ['required', 'string', 'email', 'max:255','unique:supplier_profile'],
-    //         'password' => ['required', 'string', 'min:6', 'confirmed'],
-    //     ], $messages);
-
-    //         if ($validator->fails()) {
-    //             return redirect()->back()
-    //                         ->withErrors($validator)
-    //                         ->withInput();
-    //         }
-
-    //         $supplier = Supplier::create([
-    //             'user_id' => 0,
-    //             'name' => $request['name'],
-    //             'email' => $request['email'],
-    //             'password' => Hash::make($request['password']),
-    //             'image' => '/images/avtar.png',      
-    //            ]);
-        
-              
-    //            $data = array(
-    //             'name'=>$name,
-    //            );
-             
-    //         if($supplier){
-    //             Mail::send("emails.Profile_Register_Welcome",$data, function($message) use ($email, $name)
-    //             {
-    //                 $message->to($email, $name)->subject('Welcome!');
-    //             });
-    //             }
-                
-    //           //  Session::flash('success', "Your Profile is Successfully Register.");
-    //             return response()->json(['success'=>'Your Profile is Successfully Register.']);
-
-
-    //            // return redirect()->route('home');
-    //    }
-
        
+             $check_mail = Customer::where('email',$email)->first();
+             if($check_mail){
+                return response()->json(['error'=>'Email already in use!']);
+             }else{
 
-            $validator = Validator::make($request->all(), [
-                'email' =>  ['required', 'string', 'email', 'max:255','unique:customer_profile'],
-                'password' => ['required', 'string', 'min:6', 'confirmed'],
-            ], $messages); 
-
-                if ($validator->fails()) {
-                    return redirect()->back()
-                                ->withErrors($validator)
-                                ->withInput();
-                }
-
-                $Customer = Customer::create([
+                $Customer = Customer::insertGetId([
                     'user_id' => 0,
                     'name' => $request['name'],
                     'email' => $request['email'],
+                    'password_string' => $request['password'],
                     'password' => Hash::make($request['password']),
+                   // "status"=>'Approved',
                     'image' => '/images/avtar.png', 
                    ]);
                  
@@ -377,13 +331,17 @@ class RegisterController extends Controller
             * @Author: Satish Parmar
             * @ purpose: This helper function use for send dynamic email template from db.
             */
-            $template = EmailTemplate::where('name', 'CustomerProfile-Register')->first();
-            $to_mail = $email;
-            $to_name = $name;
-            $view_params = [
-                'name'=>$name, 
-                'base_url' => url('/'),
-            ];
+            $customer_id = $Customer;
+            $verificationLink = route('customer-verificationLink',base64_encode($customer_id));
+
+                $template = EmailTemplate::where('name', 'Customer-VerificationLink')->first();
+                $to_mail = $email;
+                $to_name = $name;
+                $view_params = [
+                    'name'=>$name, 
+                    'base_url' => url('/'),
+                    'verificationLink' => $verificationLink
+                ];
             // in DB Html bind data like {{firstname}}
             send_mail_dynamic($to_mail,$to_name,$template,$view_params);
   
@@ -397,7 +355,7 @@ class RegisterController extends Controller
                     // return redirect()->route('home');
 
                 return response()->json(['success'=>'Thank you! Please check your email for next steps.']);
-
+}
         
    
          

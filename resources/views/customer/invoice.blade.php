@@ -103,16 +103,15 @@
                         <form method="post" action="{{route('customer.payment')}}">
                             @csrf
                             <input type="hidden" name="booking_id" value="{{$booking->booking_id}}">
-                            @if(isset($user_id) && $user_id != "")
-                            		@if($booking->booking_status == 0)
+                            
+                            		@if($booking->booking_status != 'complete')
                             		<button class="btn common-btn" type="submit">Pay</button>
                             		@else
 			                          <div class="alert-warning" role="alert">
 			                          This invoice is already paid.
 			                         </div>
                             		@endif
-                                    
-                            @endif
+                         
                         </form>
                     </div>
                 </div>

@@ -17,7 +17,28 @@
                                 class="fal fa-angle-right"></i></span></a></li>
                         <li class="account-details"><a href="#account-details" data-toggle="tab" class="nav-link">analytics<span><i
                                 class="fal fa-angle-right"></i></span></a></li>
-                        <li class="messenger"><a href="#messenger" data-toggle="tab" id="messenger-tab-menu" class="nav-link">messenger<span><i
-                                class="fal fa-angle-right"></i></span></a></li>
-                    </ul>
+                        <li class="messenger"><a href="#messenger" data-toggle="tab" id="messenger-tab-menu" class="nav-link">messenger <span><i
+                                class="fal fa-angle-right"></i></span>
+                                
+                                          @php
+                                          if(isset($conversation)){
+                                          foreach($conversation as $key_count => $value_count){
+                                            if($value_count->read_unread == 0 && $value_count->status == 0){
+                                              $unread +=1;
+                                            }
+                                          }
+                                       
+                                          if($unread > 0){
+                                             if($unread == 1){
+                                              echo "<sub class='message_alert_".$value->customer_id." span_message_alert_nav'><sub>".$unread."</sub></sub>";
+                                             } else {
+                                              echo "<sub class='message_alert_".$value->customer_id." span_message_alert_nav'><sub>".$unread."</sub></sub>";
+                                             }
+                                          }
+                                          $unread = 0;
+                                          }
+                                         @endphp
+                                </a>
+                            </li>
+                   </ul>
   </div>

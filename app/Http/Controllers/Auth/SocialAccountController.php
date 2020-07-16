@@ -28,88 +28,90 @@ class SocialAccountController extends Controller
 
     public function __construct()
     {
-        $this->middleware('guest');
-        $this->middleware('guest:customer');
-        $this->middleware('guest:supplier');
-        $this->middleware('guest:backpack');
+        // $this->middleware('guest');
+        // $this->middleware('guest:customer');
+        // $this->middleware('guest:supplier');
+        // $this->middleware('guest:backpack');
     }
     public  function registerandLogin(Request $request)
-    {
-    	$name = $request->name;
+    {   
+      	$name = $request->name;
     	$email = $request->email;
     	if (Customer::where('email', $email)->exists()) {
-    		// Login
-    		$customer_profile = Customer::select('status','email','id')->where('email', $email)->first();
+            // Login
+            
+    		$customer_profile = Customer::select('status','email','id','password_string')->where('email', $email)->first();
             if($customer_profile){
                 $profile_status =  $customer_profile->status;
+                $password =  $customer_profile->password_string;
                 if($profile_status=="Disapproved"){
-                        // Session::flash('info', "Your Profile is under Review.");
-                        // return Redirect::back();
                          return response()->json(["success" => true, "approved"=> false,"message" => "Your Profile is under Review."]);
-
                 }
                 else{
-
-                	 if (Auth::guard('customer')->attempt(['email' => $email, 'password' => '123'],true)) {
- 						
- 						Customer::where('email', $email)
-				            ->update(['remember_token' => null]);
-				   //          dd('hii');
- 						 return response()->json(["success" => true,"approved"=> true]);
-			           
-			         }
-                	// Auth::login($customer_profile, true);
-
-
-            //     	$validator = $request->validate(['email' => 'required']);
-            //     	if (Auth::attempt($validator)) {
-		          // 		dd('hiii');
-		          //    	return redirect()->route('customer.dashboard');
-	         		// }
-	         		// else{
-	         		// 	dd('esle');
-	         		// }
+                     if (Auth::guard('customer')->attempt(['email' => $email, 'password' => $password], true)) {
+                        return response()->json(["success"=>true,"flag"=>1, "approved"=> true, "route"=> route('customer.dashboard')]);
+                         // return redirect()->route('customer.dashboard');
+                    } else {
+                        return response()->json(["error"=>true,"role"=>"invalid", "approved"=> false ,"message"=>"Login failed! Wrong user credentials."]);
+                    }
                 }
             }
 
     	}else{
+            $check_mail = Customer::where('email',$email)->first();
+            if($check_mail){
+               return response()->json(['error'=>'Email already in use!']);
+            }
+       else{
     		// Register and Login
-    		$Customer = Customer::create([
+    		$Customer = Customer::insertGetId([
             'user_id' => 0,
             'name' => $name,
             'email' => $email,
-            'password' => Hash::make('123'),
+            'password' => Hash::make('123456'),
+            'password_string' => 123456,
             'image' => '/images/avtar.png', 
+            'status'=>'Approved'
            ]);
            $data = array(
             'name'=>$name,
            );
 	   		if($Customer){
-	            // Mail::send("emails.Customer_Profile_Register_Welcome",$data, function($message) use ($email, $name)
-	            // {
-	            //     $message->to($email, $name)->subject('Welcome!');
-                // });
-                
+
+                if (Auth::guard('customer')->attempt(['email' => $email, 'password' => 123456], true)) {
+                    return response()->json(["success"=>true,"flag"=>1, "approved"=> true, "route"=> route('customer.dashboard')]);
+                     // return redirect()->route('customer.dashboard');
+                } else {
+                    return response()->json(["error"=>true,"role"=>"invalid", "approved"=> false ,"message"=>"Login failed! Wrong user credentials."]);
+                }
+
+
                 /*
                 * @Author: Satish Parmar
                 * @ purpose: This helper function use for send dynamic email template from db.
                 */
-                    $template = EmailTemplate::where('name', 'CustomerProfile-Register')->first();
-                    $to_mail = $email;
-                    $to_name = $name;
-                    $view_params = [
-                        'name'=>$name, 
-                        'base_url' => url('/'),
-                    ];
+
+                // $customer_id = $Customer;
+                // $verificationLink = route('customer-verificationLink',base64_encode($customer_id));
+
+                //     $template = EmailTemplate::where('name', 'Customer-VerificationLink')->first();
+                //     $to_mail = $email;
+                //     $to_name = $name;
+                //     $view_params = [
+                //         'name'=>$name, 
+                //         'base_url' => url('/'),
+                //         'verificationLink' => $verificationLink
+                //     ];
                     // in DB Html bind data like {{firstname}}
-                    send_mail_dynamic($to_mail,$to_name,$template,$view_params);
-    
+                  //  send_mail_dynamic($to_mail,$to_name,$template,$view_params);
                 /* @author:Satish Parmar EndCode */
+               // return response()->json(["success" => true, "message" => "Thank you! Please check your email for next steps."]);
+               // return response()->json(["success" => true, "message" => "Your Profile is Successfully Register"]);
 
-	        }
-	        return response()->json(["success" => true, "message" => "Your Profile is Successfully Register."]);
-
+            }
+            return response()->json(["error" => true, "message" => "Something went wrong."]);
+        }
+	        
     	}
     }
-    
 }

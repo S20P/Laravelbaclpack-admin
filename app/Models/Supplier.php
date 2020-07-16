@@ -23,7 +23,7 @@ class Supplier extends Authenticatable
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    protected $fillable = ['user_id','password','password_string','name','email','phone','image','status'];
+    protected $fillable = ['user_id','password','password_string','name','email','phone','address','city','image','status'];
     protected $hidden = ['password', 'remember_token'];
     // protected $dates = [];
   
@@ -91,7 +91,10 @@ class Supplier extends Authenticatable
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
+    public function City()
+    {
+        return $this->belongsTo('App\Models\Location','city');
+    }
 
     public function Location()
     {

@@ -32,6 +32,7 @@ class PagesCrudController extends CrudController
         $this->crud->setHeading('Pages');
         $this->crud->setSubheading('Pages list','list');
         // TODO: remove setFromDb() and manually define Columns, maybe Filters
+         
         $this->crud->setFromDb();
         $this->addCustomCrudFilters();
         $this->crud->enableExportButtons();
@@ -39,6 +40,8 @@ class PagesCrudController extends CrudController
 
     protected function setupCreateOperation()
     {
+
+
         $this->crud->setTitle('Pages');
         $this->crud->setHeading('Pages');
         $this->crud->setSubheading('Add Page','create');
@@ -80,7 +83,23 @@ class PagesCrudController extends CrudController
             // 'tab'   => 'Big texts',
         ]);    
          
-        
+        // SEO content details -------------------------------
+        $this->crud->addField([
+            'name'           => 'meta_title',
+            'type'           => 'text',
+            'label'          => 'Title',
+            'tab'   => 'SEO content',
+            //  'fake' => true,
+        ]);
+
+        $this->crud->addField([
+            'name'           => 'meta_description',
+            'type'           => 'textarea',
+            'label'          => 'Description',
+            'tab'   => 'SEO content',
+            // 'fake' => true,
+          ]);
+     // SEO content details end-------------------------------
 
        // $this->crud->setValidation(PagesRequest::class);
 
@@ -94,6 +113,7 @@ class PagesCrudController extends CrudController
         $this->crud->setTitle('Pages');
         $this->crud->setHeading('Pages');
         $this->crud->setSubheading('Edit Page','edit');
+        
         $this->setupCreateOperation();
     }
 

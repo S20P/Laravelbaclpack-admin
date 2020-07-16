@@ -43,6 +43,25 @@
 {{--<script src="{{ asset('js/parallax.min.js') }}"></script>--}}
 
 
+<script>
+
+$(document).keyup(function(e) {
+     if (e.keyCode == 27) { // escape key maps to keycode `27`
+      
+        $("nav.menu-items").removeClass("active");
+        $(".offcanvas-overly").removeClass("active");
+        $(".nav-icon").removeClass("active");
+        $(".login-form-content").removeClass("active");
+        $(".signup-form-content").removeClass("active");
+       
+      // $(".nav-icon").toggleClass('active');
+       
+    }
+});
+
+</script>
+
+
 <script type="text/javascript">
     // $(window).parallaxmouse({
     //     invert: true,
@@ -584,7 +603,6 @@
                 return false;
             }
         });
-
     }
 </script>
 <script type="text/javascript">
@@ -594,8 +612,10 @@
     gapi.load('auth2', function(){
       // Retrieve the singleton for the GoogleAuth library and set up the client.
       auth2 = gapi.auth2.init({
-        client_id: '634819302439-go9j6c9slgudoffjq7e455p35lmldfg7.apps.googleusercontent.com',
-        cookiepolicy: 'single_host_origin',
+       client_id: '352586411911-6ef4p7k6vg98408cchamfau1um14hk3s.apps.googleusercontent.com', //partyperfect-live
+      // client_id: '352586411911-5hmseifiepmjmo4equt2bq1i10gdfqnc.apps.googleusercontent.com',  //localhost-party-perfect
+      cookiepolicy: 'single_host_origin',
+      
         // Request scopes in addition to 'profile' and 'email'
         //scope: 'additional_scope'
       });
@@ -610,8 +630,10 @@
         var profile = googleUser.getBasicProfile();
         var name  = profile.getName();
         var email  = profile.getEmail();
+
+      console.log("profile",profile);
         var url = "{{ route('sociallogins')}}";
-        var social_url = url.replace("http://", "https://");
+       // var social_url = url.replace("http://", "https://");
         $('.error_login_facebook').empty();
         if(name != "" && email != ""){
              $.ajax({
@@ -619,7 +641,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url  : social_url,
+                    url  : url,
                     data : {'name': name, 'email' : email},
                     success : function(data){
                        
@@ -632,7 +654,8 @@
                                 return false;
                             }
                             else if(data.approved == false){
-                                $('.error_login_facebook').append('<div class="alert alert-success" role="alert">'+data.message+'</div>');
+                                $('.error_login_facebook').append('<div class="alert alert-success success_fade1" role="alert">'+data.message+'</div>');
+                               setTimeout(function(){  $('.success_fade1').fadeOut(); }, 6000);
                                 //     $.toast({
                                 //     heading: 'Information',
                                 //     hideAfter: 5000,
@@ -643,8 +666,8 @@
                                 // });
                              }
                              else{
-                                 $('.success_login_alert').append('<div class="alert alert-success success_fade" role="alert">'+data.message+'</div>');
-                                  setTimeout(function(){  $('.success_fade').fadeOut(); }, 3000);
+                                 $('.success_login_alert').append('<div class="alert alert-success success_fade2" role="alert">'+data.message+'</div>');
+                              setTimeout(function(){  $('.success_fade2').fadeOut(); }, 6000);
                                 //   $.toast({
                                 //     heading: 'Success',
                                 //     bgColor: '#007bff',
@@ -656,9 +679,12 @@
                                 // });
                              }
                         }
+                        if(data.error == true){
+                            $('.error_login_facebook').append('<div class="alert alert-danger success_fade3" role="alert">'+data.message+'</div>');
+                              setTimeout(function(){  $('.success_fade3').fadeOut(); }, 6000);
+                        }
                         return false;
-                    
-                    }
+                     }
                 });
          }else{
              $.toast({
@@ -729,7 +755,7 @@ function getFbUserData(){
         var name  = response.first_name+" "+response.last_name;
         var email  = response.email;
         var url = "{{ route('sociallogins')}}";
-        var social_url = url.replace("http://", "https://");
+       var social_url = url.replace("http://", "https://");
         $('.error_login_facebook').empty();
         $('.success_login_alert').empty();
         if(name != "" && email != ""){
@@ -750,13 +776,35 @@ function getFbUserData(){
                                 return false;
                              }
                              else if(data.approved == false){
-                                    $('.error_login_facebook').append('<div class="alert alert-success" role="alert">'+data.message+'</div>');
+                                $('.error_login_facebook').append('<div class="alert alert-success success_fade1" role="alert">'+data.message+'</div>');
+                               setTimeout(function(){  $('.success_fade1').fadeOut(); }, 6000);
+                                //     $.toast({
+                                //     heading: 'Information',
+                                //     hideAfter: 5000,
+                                //     text: data.message,
+                                //     showHideTransition: 'fade',
+                                //     icon: 'info',
+                                //     position: 'top-right',
+                                // });
                              }
                              else{
-                                 $('.success_login_alert').append('<div class="alert alert-success success_fade" role="alert">'+data.message+'</div>');
-                                  setTimeout(function(){  $('.success_fade').fadeOut(); }, 3000);
-
+                                 $('.success_login_alert').append('<div class="alert alert-success success_fade2" role="alert">'+data.message+'</div>');
+                              setTimeout(function(){  $('.success_fade2').fadeOut(); }, 6000);
+                                //   $.toast({
+                                //     heading: 'Success',
+                                //     bgColor: '#007bff',
+                                //     hideAfter: 5000,
+                                //     text: data.message,
+                                //     showHideTransition: 'fade',
+                                //     icon: 'success',
+                                //     position: 'top-right',
+                                // });
                              }
+                        }
+                        if(data.error == true){
+                            $('.error_login_facebook').append('<div class="alert alert-danger success_fade3" role="alert">'+data.message+'</div>');
+                              setTimeout(function(){  $('.success_fade3').fadeOut(); }, 6000);
+                        }
                              
                         }
                         return false;

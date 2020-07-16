@@ -30,7 +30,7 @@ class SupplierRequest extends FormRequest
             'phone' => ['required', 'numeric'],
             'password' => 'required|confirmed',
             'password_confirmation' => 'required',
-            'image' => ['required','mimes:jpeg,jpg,png,gif'],
+             'image' => ['required','mimes:jpeg,jpg,png,gif'],
             'business_name' => 'required',
             'service_description' => 'required',
             'service_id' => 'required',

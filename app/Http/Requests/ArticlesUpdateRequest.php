@@ -31,8 +31,8 @@ class ArticlesUpdateRequest extends FormRequest
             'quote' => 'required|min:5',
             'content' => 'required|min:5',
             'category_id' => 'required',
-            'media_type' => 'required',
-            'video' => 'url'
+            // 'media_type' => 'required',
+            // 'video' => 'url'
         ];
     }
 

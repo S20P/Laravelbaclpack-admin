@@ -113,6 +113,55 @@ function paymentModal(heading, formContent) {
 
 }
 
+$(document).on('click','#invoice_download',function() {
+
+console.log("Download-invoice-admin");
+var action_url = $(this).data("url");
+var booking_id = $(this).data("id");
+
+var i = action_url + "/" + booking_id;
+
+console.log("i",i);
+
+$.ajax(
+{
+    type: "POST",
+    url: i,
+    success: function (resonse)
+    {
+        console.log("invoice-download-response",resonse);
+    
+    
+    if(resonse.success){
+        var link = document.createElement('a');
+        link.href = resonse.invoice_download_link;
+        link.download = resonse.invoice_download_file;
+        link.dispatchEvent(new MouseEvent('click'));
+    }        
+        resonse.success ? 
+        $.toast(
+        {
+            heading: "Success",
+            text: resonse.success,
+            position: "top-right",
+            stack: !1,
+            icon: "success"
+        }) : $.toast(
+        {
+            heading: "Success",
+            text: resonse.error,
+            position: "top-right",
+            stack: !1,
+            icon: "error"
+        })
+    }
+})
+
+
+});
+
+
+
 
  $(document).on('click','#save',function() {
           var action_url = $('#payment_action_form').attr("action");

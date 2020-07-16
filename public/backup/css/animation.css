@@ -1,0 +1,474 @@
+#home-layer-1 {
+	top: 11%;
+	right: 93%
+}
+
+#home-layer-2 {
+	top: 14.5%;
+	right: 20%
+}
+
+img#home-layer-3 {
+	top: 20%;
+	right: 35%
+}
+
+#home-layer-4 {
+	right: 32%;
+	top: 48%;
+	z-index: -1
+}
+
+#home-layer-5 {
+	top: 62%;
+	right: 52%;
+	z-index: 1
+}
+
+#home-layer-6 {
+	top: 58%;
+	z-index: -1;
+	right: 0
+}
+
+img#home-layer-7 {
+	top: 79%;
+	right: 18%
+}
+
+img#home-layer-8 {
+	top: 84%;
+	right: 32%
+}
+
+img#home-layer-9 {
+	top: 95%;
+	right: -50px
+}
+
+img#home-layer-10 {
+	top: 95%;
+	right: 40%
+}
+
+img#our-story-layer-1 {
+	top: 10.3%;
+	right: 20%
+}
+
+img#our-story-layer-2 {
+	top: 26.5%;
+	right: 54%;
+	z-index: -1
+}
+
+img#our-story-layer-3 {
+	top: 28%;
+	right: 60%;
+	z-index: -1
+}
+
+img#our-story-layer-4 {
+	top: 56%;
+	right: 76%
+}
+
+img#our-story-layer-5 {
+	top: 44%;
+	right: 18%;
+	z-index: -1
+}
+
+img#our-story-layer-6 {
+	top: 64%;
+	right: 18%;
+	z-index: -1
+}
+
+img#our-story-layer-7 {
+	top: 84%;
+	right: 22%;
+	z-index: -1
+}
+
+img#our-story-layer-8 {
+	top: 99%;
+	right: 54%;
+	z-index: -1
+}
+
+img#become-supplier-layer-1 {
+	top: 70%;
+	right: 58%
+}
+
+img#become-supplier-layer-2 {
+	top: 70%;
+	right: 62%
+}
+
+img#become-supplier-layer-3 {
+	top: 15%;
+	right: 20%
+}
+
+img#our-supplier-layer-1 {
+	top: 41%;
+	right: 75%
+}
+
+img#our-supplier-layer-2 {
+	top: -4%;
+	right: 10%;
+	z-index: -1;
+}
+
+img#our-supplier-layer-3 {
+	top: 80%;
+	right: 70%
+}
+
+img#our-supplier-layer-4 {
+	top: 80%;
+	right: 74%
+}
+
+img#supplier-details-layer-1 {
+	top: 10%;
+	right: 30%
+}
+
+img#supplier-details-layer-2 {
+	top: 59%;
+	right: 10%
+}
+
+img#blog-layer-1 {
+	top: 29%;
+	right: 6%;
+	z-index: -1
+}
+
+img#blog-layer-2 {
+	top: 25%;
+	right: 0;
+	z-index: -1
+}
+
+img#blog-details-layer-1 {
+	top: 17%;
+	right: 74%
+}
+
+img#blog-details-layer-2 {
+	top: 54%;
+	right: -5%
+}
+
+#browse-layer-1 {
+	top: 36%;
+	right: 90%
+}
+
+#browse-layer-2 {
+	top: 0;
+	right: 40%
+}
+
+#browse-layer-3 {
+	top: 42%;
+	right: 0
+}
+
+#browse-layer-4 {
+	top: 64%;
+	right: 40%
+}
+
+img#help-layer-1 {
+	top: 83%;
+	right: 0
+}
+
+img#supplier-faq-layer-1 {
+	top: 41%;
+	right: 0;
+}
+
+img#supplier-faq-layer-2 {
+	top: 35%;
+	right:2%;
+}
+
+img#supplier-faq-layer-3 {
+	top: 65%;
+	right: 75%
+}
+
+img#supplier-take-care-layer-1 {
+	top: 39%;
+	right: 2%
+}
+
+img#supplier-take-care-layer-2 {
+	top: 33%;
+	right: -5%
+}
+
+img#supplier-take-care-layer-3 {
+	top: 70%;
+	right: 75%
+}
+
+img#related-article-layer1 {
+	top: 99%;
+	right: 20%
+}
+img#blog-layer-3 {
+    right: 86%;
+    top: 98%;
+}
+
+img#contact-us-layer-1 {
+	top: 20%;
+	right: 2%;
+	z-index:-1;
+}
+
+img#contact-us-layer-2 {
+	top: 22%;
+	right: -5%;
+	z-index: -1;
+}
+
+img#contact-us-layer-3 {
+	top: 24%;
+	right: 75%;
+	z-index: -1;
+}
+
+@media (min-width:768px) {
+	.FrontEnd_pages_OurStory .home-page-banner .col-sm-12:before {
+		display: none
+	}
+	.our-story .container:after,
+	.our-story .container:before {
+		display: none
+	}
+	.the-benefits .container:before {
+		display: none
+	}
+	.our-story-3 .container:before {
+		display: none
+	}
+	.our-story-2 .container:after,
+	.our-story-2 .container:before {
+		display: none
+	}
+	.our-story-2:before {
+		display: none
+	}
+	.category-slider:after,
+	.category-slider:before {
+		display: none
+	}
+	.category-item:before {
+		display: none
+	}
+	.featured-vendors .container:after,
+	.featured-vendors .container:before {
+		display: none
+	}
+	.featured-vendors:before {
+		display: none
+	}
+	.featured-vendors.related_suppliers:before {
+		display: block
+	}
+	.category-section:before {
+		display: none
+	}
+	.FrontEnd_pages_BecomeSupplier .home-page-banner .col-sm-12:before,
+	.FrontEnd_pages_OurSuppliers .home-page-banner .col-sm-12:before {
+		display: none
+	}
+	.home .featured-vendors:before {
+		display: none
+	}
+	#atveroeos .container:after,
+	#atveroeos .container:before {
+		display: none
+	}
+	.FrontEnd_pages_Help .content:before {
+		display: none
+	}
+	#our-suppliers-block:before {
+		display: none
+	}
+	.FrontEnd_pages_OurSuppliers .content:after {
+		display: none
+	}
+	.FrontEnd_pages_OurSuppliers .content:before {
+		display: none
+	}
+	.company-slider:before {
+		display: none
+	}
+	#blog-search-section:after,
+	#blog-search-section:before {
+		display: none
+	}
+	.FrontEnd_pages_ArticleBlogPage .article-profile:before {
+		display: none
+	}
+	.video-block:after {
+		display: none
+	}
+	.FrontEnd_pages_Faq .content #faq-section>.container:before,
+	.FrontEnd_pages_SupplierTackandCare .content .supplier-block>.container:before {
+		display: none
+	}
+	.FrontEnd_pages_Faq .content #faq-section>.container:after,
+	.FrontEnd_pages_SupplierTackandCare .content .supplier-block>.container:after {
+		display: none
+	}
+	.FrontEnd_pages_Faq .content:before,
+	.FrontEnd_pages_SupplierTackandCare .content:before {
+		display: none
+	}
+}
+
+@media (max-width:767px) {
+	#home-layer-1 {
+		display: none
+	}
+	#home-layer-2 {
+		display: none
+	}
+	img#home-layer-3 {
+		display: none
+	}
+	#home-layer-4 {
+		display: none
+	}
+	#home-layer-5 {
+		display: none
+	}
+	#home-layer-6 {
+		display: none
+	}
+	img#home-layer-7 {
+		display: none
+	}
+	img#home-layer-8 {
+		display: none
+	}
+	img#home-layer-9 {
+		display: none
+	}
+	img#home-layer-10 {
+		display: none
+	}
+	img#our-story-layer-1 {
+		display: none
+	}
+	img#our-story-layer-2 {
+		display: none
+	}
+	img#our-story-layer-3 {
+		display: none
+	}
+	img#our-story-layer-4 {
+		display: none
+	}
+	img#our-story-layer-5 {
+		display: none
+	}
+	img#our-story-layer-6 {
+		display: none
+	}
+	img#our-story-layer-7 {
+		display: none
+	}
+	img#our-story-layer-8 {
+		display: none
+	}
+	img#become-supplier-layer-1 {
+		display: none
+	}
+	img#become-supplier-layer-2 {
+		display: none
+	}
+	img#become-supplier-layer-3 {
+		display: none
+	}
+	img#our-supplier-layer-1 {
+		display: none
+	}
+	img#our-supplier-layer-2 {
+		display: none
+	}
+	img#our-supplier-layer-3 {
+		display: none
+	}
+	img#our-supplier-layer-4 {
+		display: none
+	}
+	img#supplier-details-layer-1 {
+		display: none
+	}
+	img#supplier-details-layer-2 {
+		display: none
+	}
+	img#blog-layer-1 {
+		display: none
+	}
+	img#blog-layer-2 {
+		display: none
+	}
+	img#blog-details-layer-1 {
+		display: none
+	}
+	img#blog-details-layer-2 {
+		display: none
+	}
+	#browse-layer-1 {
+		display: none
+	}
+	#browse-layer-2 {
+		display: none
+	}
+	#browse-layer-3 {
+		display: none
+	}
+	#browse-layer-4 {
+		display: none
+	}
+	img#help-layer-1 {
+		display: none
+	}
+	img#supplier-faq-layer-1 {
+		display: none
+	}
+	img#supplier-faq-layer-2 {
+		display: none
+	}
+	img#supplier-faq-layer-3 {
+		display: none
+	}
+	img#supplier-take-care-layer-1 {
+		display: none
+	}
+	img#supplier-take-care-layer-2 {
+		display: none
+	}
+	img#supplier-take-care-layer-3 {
+		display: none
+	}
+	img#related-article-layer1 {
+		display: none
+	}
+	img#contact-us-layer-1,
+	img#contact-us-layer-2,
+	img#contact-us-layer-3{display: none;}
+}

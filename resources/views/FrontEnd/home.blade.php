@@ -191,7 +191,7 @@
 
     <section class="client-say">
         <div class="container">
-            <div class="title-text wow fadeInUp" data-wow-duration="0.10s" data-wow-delay="0.8s">
+            <div class="title-text wow fadeInUp" data-wow-duration="0.6s" data-wow-delay="0.3s">
                 <span class="sub-heading">What our</span>
                 <h2>Clients say</h2>
             </div>
