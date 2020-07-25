@@ -80,7 +80,7 @@
 												<span class="list-drop-btn"><i class="fas fa-chevron-down"></i></span>
 											</div>
 											<div class="list-accordion-content">
-												<div class="list-accordion-content-box"><p>{{$faqsdetails['answers']}}</p>
+												<div class="list-accordion-content-box"><p>{!! $faqsdetails['answers'] !!}</p>
 											</div>
 										</div>
 									</div>

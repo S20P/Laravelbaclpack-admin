@@ -48,7 +48,7 @@
 
                         <div class='form-row row payment-block'>
                             <div class='col-xs-4 form-group cvv required'>
-                                <label class='control-label'>CVV</label> <input autocomplete='off'
+                                  <label class='control-label'>CVV</label> <input autocomplete='off'
                                                                                 class='form-control card-cvc' placeholder='ex. 311' size='4'
                                                                                 type='number' oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength = "3">
                             </div>
@@ -63,6 +63,15 @@
                                         type='number' oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength = "4">
                             </div>
                         </div>
+                        <!-- <div class='form-row row'>
+                            <div class='col-xs-12 form-group card-new'>
+                                <label class='control-label'>Coupon Code</label> 
+                                        <input  class='form-control card-new' type=text size="6" id="coupon" name="coupon_code"  size='50'/>
+                                      <span id="msg"></span>
+                            </div>
+                        </div> -->
+
+
                         <div class="form-row">
                              <div class="col-md-12">
                                 <div class="form-control total white-btn">
@@ -155,6 +164,24 @@
             }
         }
 
+       
+  $('#coupon').change(function(){
+    requestData = "coupon_code="+$('#coupon').val();
+    var coupon_code = $('#coupon').val();
+    $.ajax({
+      type: "GET",
+      url: "{{route('validate-coupon')}}/"+coupon_code,
+      data: requestData,
+      success: function(response){
+          console.log("coupen-response",response);
+        if (response.success==true) {
+          $('#msg').html('<div class="alert-success">Valid Code!</div>');
+        } else {
+          $('#msg').html('<div class="alert-danger">Invalid Code!</div>');
+        }
+      }
+    });
+  });
     });
 </script>
 @endsection

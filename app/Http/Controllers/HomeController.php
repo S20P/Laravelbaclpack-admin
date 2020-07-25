@@ -103,8 +103,8 @@ class HomeController extends Controller
                             ->where('supplier_profile.status','Approved')
                            ->groupby('supplier_id')
                            ->groupBy('service_id')
-
-                            ->select('supplier_services.price_range','supplier_services.supplier_id as spid','supplier_profile.name as supplier_name','supplier_services.business_name','supplier_services.service_description','supplier_services.location','location.location_name as location_name','supplier_profile.image','services.name as service_name','services.price as service_price','supplier_services.service_id','supplier_services.id as ssid');
+                           ->orderBy('supplier_profile.lft')
+                                                      ->select('supplier_services.price_range','supplier_services.supplier_id as spid','supplier_profile.name as supplier_name','supplier_services.business_name','supplier_services.service_description','supplier_services.location','location.location_name as location_name','supplier_profile.image','services.name as service_name','services.price as service_price','supplier_services.service_id','supplier_services.id as ssid');
         if($request->service_name != ""){
             $query->Where([['supplier_services.service_id','=', ''.$request->service_name.'']]);
         }
@@ -118,7 +118,7 @@ class HomeController extends Controller
         }
         if($request->price_range != ""){
             $query->Where([['supplier_services.price_range',$request->price_range]]);
-        }
+        }   
 //    dd($this->per_page);
         $vendors = $query->paginate($this->per_page);
 
@@ -160,7 +160,8 @@ class HomeController extends Controller
                             ->where('supplier_profile.status','Approved')
                             ->groupby('supplier_id')
                             ->groupBy('service_id')
-                             ->paginate($this->per_page);
+                            ->orderBy('supplier_profile.lft')
+                            ->paginate($this->per_page);
 
         // $featuredvendors = $this->getFutureVendors();
         $filters =  $this->getFilters();
@@ -243,7 +244,7 @@ class HomeController extends Controller
                 ->join('services', 'supplier_services.service_id', '=', 'services.id')
                 ->select('supplier_services.id','service_description','supplier_profile.image','business_name','services.name as service_name')
                 ->where([['supplier_profile.status','Approved'],['supplier_services.featured',1]])
-                ->orderBy('id','asc')
+                ->orderBy('supplier_profile.lft')
                 ->get();
     }  
     public function becomeSupplierSignupform(Request $request){

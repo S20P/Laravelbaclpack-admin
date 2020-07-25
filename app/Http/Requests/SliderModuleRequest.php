@@ -30,7 +30,7 @@ class SliderModuleRequest extends FormRequest
              'slug' => 'unique:slider_module',
              'content' => 'required|min:5',
              'slide_number' => 'integer|min:0',
-             'image' => 'required|image',
+             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  
 
         ];
     }

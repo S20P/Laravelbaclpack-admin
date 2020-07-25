@@ -21,12 +21,15 @@ class ServicesCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ReorderOperation;
 
     public function setup()
     {
         $this->crud->setModel('App\Models\Services');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/services');
         $this->crud->setEntityNameStrings('service', 'services');
+        $this->crud->enableReorder('name', 0);
+  
     }
 
     protected function setupListOperation()
@@ -55,6 +58,7 @@ class ServicesCrudController extends CrudController
             'name','slug','price'
         ]);
 
+        $this->crud->orderBy('lft');
         $this->addCustomCrudFilters();
     }
 
@@ -128,7 +132,10 @@ class ServicesCrudController extends CrudController
 
         // TODO: remove setFromDb() and manually define Fields
         $this->crud->setFromDb();
-
+        $this->crud->removeField('parent_id');
+        $this->crud->removeField('lft');
+        $this->crud->removeField('rgt');
+        $this->crud->removeField('depth');
 
     }
 
@@ -185,6 +192,11 @@ class ServicesCrudController extends CrudController
             // 'disk' => 'public',
         ]);
 
+
+        $this->crud->removeField('parent_id');
+        $this->crud->removeField('lft');
+        $this->crud->removeField('rgt');
+        $this->crud->removeField('depth');
         $this->crud->setValidation(ServicesUpdateRequest::class);
     }
 
@@ -209,7 +221,5 @@ class ServicesCrudController extends CrudController
         function ($value) { // if the filter is active
             $this->crud->addClause('where', 'price', 'LIKE', "%$value%");
         });
-
     }
-
 }

@@ -28,7 +28,7 @@
             </div>
           </div>
         </form>
-        <div class="forgot_password text-center"> <a class="forgot_pwd" href="{{ route('password.reset','supplier') }}">Forgot Your supplier Profile Password?</a></div>
+        <div class="forgot_password text-center"> <a class="forgot_pwd" href="{{ route('password.reset','supplier') }}">Forgot Your Password?</a></div>
       </div>
     </div>
   </div>

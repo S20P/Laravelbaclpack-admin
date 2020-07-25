@@ -215,11 +215,21 @@ class Analytics extends Model
 
     public function setImageUrlAttribute($value)
     {
+
         $attribute_name = "image_url";
         $disk = "public";
-        $destination_path = "uploads/";
+        $destination_path = "uploads";
+        $upload_imagename = md5($value->getClientOriginalName().random_int(1, 9999).time()).'.'.$value->getClientOriginalExtension();
+        $upload_url = public_path($destination_path).'/'.$upload_imagename;
+        $filename = compress_image($_FILES["image_url"]["tmp_name"], $upload_url, 40);
+        $file_path = $destination_path.'/'.$upload_imagename;
+        $this->attributes[$attribute_name] = $file_path;
 
-        $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
+        // $attribute_name = "image_url";
+        // $disk = "public";
+        // $destination_path = "uploads/";
+
+        // $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
 
     // return $this->attributes[{$attribute_name}]; // uncomment if this is a translatable field
     }

@@ -438,7 +438,7 @@
                     <div class="forgott">
                     <br>
                      <p> <a class="sign-up header-btn" href=""><span>Sign up</span></a> </p> 
-                     <p> <a href="{{ route('password.reset','customer') }}">Forgot Your customer Profile Password?</a></p>
+                     <p> <a href="{{ route('password.reset','customer') }}">Forgot Your Password?</a></p>
                     </div>
               </div>
            </div>
@@ -621,7 +621,7 @@ DoActionAnalytics("{{$key}}","{{$user_id}}","{{ $vendorsdata->ssid }}","impressi
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url  : "{{ route('customer.wishlist') }}",
+                url  : "{{ route('customer.wishlist-post') }}",
                 data : { 'supplier_service_id': supplier_service_id},
                 success : function(data){
                     if(data.success == true){

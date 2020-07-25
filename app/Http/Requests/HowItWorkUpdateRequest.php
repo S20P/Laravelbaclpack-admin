@@ -29,7 +29,7 @@ class HowItWorkUpdateRequest extends FormRequest
              'heading' => 'required|min:5',
              'content' => 'required|min:5',
              'slide_number' => 'integer|min:0',
-             'image' => ['mimes:jpeg,jpg,png,gif'],
+             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 

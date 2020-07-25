@@ -29,8 +29,8 @@ class ServicesRequest extends FormRequest
             'name' => 'required',
             'slug' =>  'unique:services',
             'price' => 'required|numeric',
-            'image' => 'required|mimes:jpeg,jpg,png,gif',
-            'image_hover' => 'required|mimes:jpeg,jpg,png,gif',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_hover' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 

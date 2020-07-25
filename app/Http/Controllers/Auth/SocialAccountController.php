@@ -36,7 +36,12 @@ class SocialAccountController extends Controller
     public  function registerandLogin(Request $request)
     {   
       	$name = $request->name;
-    	$email = $request->email;
+        $email = $request->email;
+        
+        if($request->email==null){
+            $email = "testfacke@gmail.com";
+        }
+
     	if (Customer::where('email', $email)->exists()) {
             // Login
             
@@ -48,11 +53,11 @@ class SocialAccountController extends Controller
                          return response()->json(["success" => true, "approved"=> false,"message" => "Your Profile is under Review."]);
                 }
                 else{
-                     if (Auth::guard('customer')->attempt(['email' => $email, 'password' => $password], true)) {
+                     if (Auth::guard('customer')->attempt(['email' => $email, 'password' => 123456], true)) {
                         return response()->json(["success"=>true,"flag"=>1, "approved"=> true, "route"=> route('customer.dashboard')]);
                          // return redirect()->route('customer.dashboard');
                     } else {
-                        return response()->json(["error"=>true,"role"=>"invalid", "approved"=> false ,"message"=>"Login failed! Wrong user credentials."]);
+                        return response()->json(["error"=>true,"role"=>"invalid", "approved"=> false ,"message"=>"Email already in use! Try other method of login."]);
                     }
                 }
             }
@@ -60,9 +65,14 @@ class SocialAccountController extends Controller
     	}else{
             $check_mail = Customer::where('email',$email)->first();
             if($check_mail){
-               return response()->json(['error'=>'Email already in use!']);
+               return response()->json(['error'=>'Email already in use! Try other method of login.']);
             }
        else{
+
+            if($request->email==null){
+                $email = "testfacke@gmail.com";
+            }
+
     		// Register and Login
     		$Customer = Customer::insertGetId([
             'user_id' => 0,
@@ -82,7 +92,7 @@ class SocialAccountController extends Controller
                     return response()->json(["success"=>true,"flag"=>1, "approved"=> true, "route"=> route('customer.dashboard')]);
                      // return redirect()->route('customer.dashboard');
                 } else {
-                    return response()->json(["error"=>true,"role"=>"invalid", "approved"=> false ,"message"=>"Login failed! Wrong user credentials."]);
+                    return response()->json(["error"=>true,"role"=>"invalid", "approved"=> false ,"message"=>"Email already in use! Try other method of login."]);
                 }
 
 

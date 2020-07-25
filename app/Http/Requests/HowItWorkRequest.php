@@ -30,7 +30,7 @@ class HowItWorkRequest extends FormRequest
              'slug' => 'unique:how_does_it_works_module',
              'content' => 'required|min:5',
              'slide_number' => 'integer|min:0',
-             'image' => ['required','mimes:jpeg,jpg,png,gif'],
+             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 

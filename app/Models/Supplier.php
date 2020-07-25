@@ -23,7 +23,7 @@ class Supplier extends Authenticatable
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    protected $fillable = ['user_id','password','password_string','name','email','phone','address','city','image','status'];
+    protected $fillable = ['user_id','password','password_string','name','email','phone','address','city','image','status','parent_id','lft','rgt','depth'];
     protected $hidden = ['password', 'remember_token'];
     // protected $dates = [];
   
@@ -77,13 +77,17 @@ class Supplier extends Authenticatable
         return $Results;
     } 
 
-    
-  
-  
+ 
     public function Resend_Confirmation_Email()
     {   
+
+          if($this->status=="Approved"){
+
         // return '<a data-button-type="Resend Confirmation Email" data-value="resend-email" title="Resend Confirmation Email" href="'. url('admin/supplier/resend-email/'. $this->id) .'" class="btn btn-xs btn-success">Resend Confirmation Email </a>';
-        return  '<a  href="'. url('admin/supplier/resend-email/'. $this->id) .'" class="btn btn-sm btn-link"><i class="fa fa-paper-plane-o"></i> Resend Confirmation Email</a>';
+                 return  '<a  href="'. url('admin/supplier/resend-email/'. $this->id) .'" class="btn btn-sm btn-link"><i class="fa fa-paper-plane-o"></i> Resend Confirmation Email</a>';
+          }
+  
+         return '<div style="clear:both;position: relative;display: inline-block;width:43%"></div>';
     }
 
     /*
@@ -117,12 +121,9 @@ class Supplier extends Authenticatable
     }
 
     public function supplier_profile()
-        {
-            return $this->hasOne('App\Models\Supplier','id');
-        }
-
-   
-
+    {
+        return $this->hasOne('App\Models\Supplier','id');
+    }
 
 
     /*
@@ -145,11 +146,22 @@ class Supplier extends Authenticatable
 
     public function setImageAttribute($value)
     {
+       
         $attribute_name = "image";
         $disk = "public";
         $destination_path = "uploads/Supplier";
+        $upload_imagename = md5($value->getClientOriginalName().random_int(1, 9999).time()).'.'.$value->getClientOriginalExtension();
+        $upload_url = public_path($destination_path).'/'.$upload_imagename;
+        $filename = compress_image($_FILES["image"]["tmp_name"], $upload_url, 40);
+        $file_path = $destination_path.'/'.$upload_imagename;
+        $this->attributes[$attribute_name] = $file_path;
+       
+       
+        // $attribute_name = "image";
+        // $disk = "public";
+        // $destination_path = "uploads/Supplier";
 
-        $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
+        // $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
 
     // return $this->attributes[{$attribute_name}]; // uncomment if this is a translatable field
     }

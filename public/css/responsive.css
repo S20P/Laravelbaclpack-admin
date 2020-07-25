@@ -1297,6 +1297,11 @@
         .widget_links .footer-widget-title.menu-item{
         margin-bottom: 10px;
     }
+    .business-profile{
+        display: block;
+    }
+    .company-img{margin-bottom: 15px;}
+    .company-img img{width: 80%;}
 }
 
 @media only screen and (max-width: 767px) {

@@ -118,7 +118,7 @@ function getCustomerWishlist(e = null) {
     var r = $(".customer_id").val();
     $.ajax({
         type: "get",
-        url: APP_URL + "/get_wishlist_account",
+        url: APP_URL + "/get-wishlist-account",
         data: {
             customer_id: r
         },

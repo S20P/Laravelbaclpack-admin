@@ -36,6 +36,8 @@ class Supplier_servicesCrudController extends CrudController
         $this->crud->setModel('App\Models\Supplier_services');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/supplier_services');
         $this->crud->setEntityNameStrings('supplier service', 'supplier services');
+
+        
     }
 
     protected function setupListOperation()
@@ -375,14 +377,13 @@ $supplier_services = DB::table("supplier_services")
     
          if($request->hasFile('image'))
         {
-            $file = $request->file('image');
-            
-                $path = $file->getClientOriginalName();
-                $name = time()."_".$path;
-                $destinationPath = public_path('/uploads/SupplierDetailsSlider/');
-                $images_url = '/uploads/SupplierDetailsSlider/'.$name;
-                $file->move($destinationPath,$name);
-            
+                $file = $request->file('image');
+                $destination_path = "/uploads/SupplierDetailsSlider";
+                $upload_imagename = md5($file->getClientOriginalName().random_int(1, 9999).time()).'.'.$file->getClientOriginalExtension();
+                $upload_url = public_path($destination_path).'/'.$upload_imagename;
+                $filename = compress_image($_FILES["image"]["tmp_name"], $upload_url, 40);
+                $file_path = $destination_path.'/'.$upload_imagename;
+                $images_url = $file_path;
            
             SupplierDetailsSlider::insert(['supplier_services_id'=>$supplier_services_id,'heading'=>$heading,'content'=>$content,'image'=>$images_url]);
         }
@@ -595,13 +596,14 @@ $supplier_services = DB::table("supplier_services")
         $images_url = "";
            if($request->hasFile('image'))
           {
-              $file = $request->file('image');
-             
-                  $path = $file->getClientOriginalName();
-                  $name = time()."_".$path;
-                  $destinationPath = public_path('/uploads/SupplierDetailsSlider/');
-                  $images_url = '/uploads/SupplierDetailsSlider/'.$name;
-                  $file->move($destinationPath,$name);
+              
+                  $file = $request->file('image');
+                  $destination_path = "/uploads/SupplierDetailsSlider";
+                  $upload_imagename = md5($file->getClientOriginalName().random_int(1, 9999).time()).'.'.$file->getClientOriginalExtension();
+                  $upload_url = public_path($destination_path).'/'.$upload_imagename;
+                  $filename = compress_image($_FILES["image"]["tmp_name"], $upload_url, 40);
+                  $file_path = $destination_path.'/'.$upload_imagename;
+                  $images_url = $file_path;
          
 
            $slider_data =  SupplierDetailsSlider::where('supplier_services_id',$id)->first();

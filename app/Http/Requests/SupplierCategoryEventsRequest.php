@@ -31,7 +31,7 @@ class SupplierCategoryEventsRequest extends FormRequest
             'description' => 'required',
             'price' => 'required|numeric',
            'location_id' => 'required',
-            'image' => 'required|mimes:jpeg,jpg,png,gif',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ];
     }

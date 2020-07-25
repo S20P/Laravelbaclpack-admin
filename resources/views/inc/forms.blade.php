@@ -30,7 +30,7 @@
                 <div class="forgott">
                 <!--  <p> <a href="{{ route('password.reset','supplier') }}">Forgot Your supplier Profile Password?</a></p>
                    <p> or</p> -->
-                     <p> <a href="{{ route('password.reset','customer') }}">Forgot Your customer Profile Password?</a></p>
+                     <p> <a href="{{ route('password.reset','customer') }}">Forgot Your Password?</a></p>
                 </div>
                 <div class="error_login_facebook"></div>
                 <div class="google_login">

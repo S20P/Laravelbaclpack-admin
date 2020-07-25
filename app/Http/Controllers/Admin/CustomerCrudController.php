@@ -55,6 +55,14 @@ $this->addCustomCrudFilters();
             'name','email','phone','status'
         ]);
 
+
+         // http://localhost:8000/admin/customer?supplier_id=1
+      if(isset($this->crud->request->profile_id) && !empty($this->crud->request->profile_id)) {
+        $profile_id = $this->crud->request->profile_id;
+       $this->crud->addClause('where', 'id', '=', base64_decode($profile_id));
+     }
+
+
        // $this->crud->setFromDb();
         $this->crud->removeColumn('user_id');
         

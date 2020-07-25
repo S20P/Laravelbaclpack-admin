@@ -24,6 +24,47 @@ class MoneySetupController extends Controller
     {
         return view('paymentstripe');
     }
+
+
+    public function ValidateCouponStripe(Request $request,$coupon_code=null)
+    {
+
+        if($coupon_code!=null){
+            try{
+                $site = getFooterDetails();
+                \Stripe\Stripe::setApiKey($site->stripe_secret);
+                $coupon = \Stripe\Coupon::retrieve($coupon_code, []);
+        
+
+                // $amount_off = ($coupon->amount_off) / 100;
+                // $percentage_off = ($coupon->percent_off);
+                // $discountType = array();
+                // if($amount_off != ""){
+                //     $discountType['type'] = "amount";
+                //     $discountType['off'] = $amount_off;
+                // }else if($percentage_off != ""){
+                //     $discountType['type'] = "percentage";
+                //     $discountType['off'] = $percentage_off;
+                // }
+
+               if ($coupon->valid) {
+                    return response()->json(['success'=>true]);
+                }else{
+                    return response()->json(['success'=>false]);
+                }
+                
+            }catch(Exception $e) {
+               // $errArr['error'] = $e->getMessage();
+              //  echo json_encode($errArr);
+
+              return response()->json(['success'=>false]);
+            }
+        }
+        
+    }
+
+    
+
     public function postPaymentStripe(Request $request)
     {
         
@@ -241,12 +282,44 @@ class MoneySetupController extends Controller
                 ]);
                 // Use Stripe's library to make requests...
 
-                $charge = Stripe\Charge::create([
-                    "amount" => $request->booking_amount * 100,
-                    "currency" => $site->currency_code,
-                    "customer" =>$customer->id,
-                    "description" => "Test payment from PartyPerfect.com."
-                ]);
+                  $booking_amount = $request->booking_amount;
+
+                  if(isset($request->coupon_code) && $request->coupon_code!=null){
+                try{
+
+                   // $stripe = new \Stripe\StripeClient($site->stripe_secret);
+
+                    $coupon_code = $request->coupon_code;
+
+                    $coupon = \Stripe\Coupon::retrieve($coupon_code, []);
+            
+                    $amount_off = ($coupon->amount_off) / 100;
+                    $percentage_off = ($coupon->percent_off);
+                    // $discountType = array();
+                    // if($amount_off != ""){
+                    //     $discountType['type'] = "amount";
+                    //     $discountType['off'] = $amount_off;
+                    // }else if($percentage_off != ""){
+                    //     $discountType['type'] = "percentage";
+                    //     $discountType['off'] = $percentage_off;
+                    // }
+
+                    $booking_amount = $booking_amount - ($request->booking_amount * $percentage_off / 100);
+                    
+                  
+                }catch(Exception $e) {
+                    return view('PaymentFailedBooking',["booking_id"=>$request->booking_id]);
+                }
+            }
+            
+            
+            $charge = Stripe\Charge::create([
+                "amount" => $booking_amount * 100,
+                "currency" => $site->currency_code,
+                "customer" =>$customer->id,
+                "description" => "Test payment from PartyPerfect.com."
+            ]);
+               
                 
                 $getBooking = (array) $getBooking;
                 $array_response = $charge->jsonSerialize();
@@ -257,7 +330,7 @@ class MoneySetupController extends Controller
                         ->insertGetId(array(
                             'booking_id' => $request->booking_id,
                             'supplier_id' => $getBooking['supplier_id'],
-                            'amount' => $request->booking_amount,
+                            'amount' => $booking_amount,
                             'payment_date' => date('Y-m-d H:i:s'),
                             "payment_status" =>  $charge['status'],
                             "response" => $json_response,

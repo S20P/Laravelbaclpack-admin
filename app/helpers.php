@@ -145,13 +145,42 @@ if (! function_exists('getEventName')) {
         return $event_name->name;
     }
 }
+
+
+function rudr_instagram_api_curl_connect( $api_url ){
+	$connection_c = curl_init(); // initializing
+	curl_setopt( $connection_c, CURLOPT_URL, $api_url ); // API URL to connect
+	curl_setopt( $connection_c, CURLOPT_RETURNTRANSFER, 1 ); // return the result, do not print
+	curl_setopt( $connection_c, CURLOPT_TIMEOUT, 20 );
+	$json_return = curl_exec( $connection_c ); // connect and get json data
+	curl_close( $connection_c ); // close connection
+	return json_decode( $json_return ); // decode and return
+}
+
 function get_instagram(){
 	$site = getFooterDetails();
     $result = array();
-    // $url = 'https://api.instagram.com/v1/users/'.$site->instagram_user_id.'/media/recent/?access_token='.$site->instagram_secret.'&count='.$site->number_of_feeds;
-    // // Also Perhaps you should cache the results as the instagram API is slow
+
+    
+     /*
+    * @Author: Satish parmar
+    */
   
+    // $access_token = "3164004994.aff5dfd.6b455858ac8d4d5c8d3e86eb591dfa49";
+    // $user_id = 3164004994;
+    // $url = "https://graph.instagram.com/me/media?fields=id,caption&access_token=".$access_token;
+    // $jsonData = json_decode((file_get_contents($url)));
+
+    //  dd($jsonData);
+
+    //@Author: Satish parmar end Code
+
+
+  //  $url = 'https://api.instagram.com/v1/users/'.$site->instagram_user_id.'/media/recent/?access_token='.$site->instagram_secret.'&count='.$site->number_of_feeds;
+    // Also Perhaps you should cache the results as the instagram API is slow
   
+
+
     // $cache = './'.sha1($url).'.json';
     // if(file_exists($cache) && filemtime($cache) > time() - 60*60){
     //     // If a cache file exists, and it is newer than 1 hour, use it
@@ -169,6 +198,14 @@ function get_instagram(){
     //     $result[$key]['link'] = $value->link;
     // }
     return $result;
+
+
+  
+
+    
+
+
+
 }
 /**
 * @author:Mitesh
@@ -213,4 +250,42 @@ if (! function_exists('send_mail_dynamic')) {
         });
     }
 }
+
  //  @author:Satish Parmar EndCode
+
+
+    /*
+    * @Author: Satish parmar
+    * @ purpose: Image size compress in php
+    * @params:
+    * source_url,
+    * destination_url,
+    * quality : 40,
+    */
+
+    if (! function_exists('compress_image')) {
+
+        function compress_image($source_url, $destination_url, $quality) {
+        $info = getimagesize($source_url);
+
+        if ($info['mime'] == 'image/jpeg') 
+        {
+            $image = imagecreatefromjpeg($source_url);
+        }
+        elseif ($info['mime'] == 'image/gif') 
+        {
+            $image = imagecreatefromgif($source_url);
+        }
+        elseif ($info['mime'] == 'image/png') 
+        {
+            $image = imagecreatefrompng($source_url);
+            imagepng($image1, $destination_url, 5);
+        }
+        if(isset($image)){
+            imagejpeg($image, $destination_url, $quality);
+        }
+        return $destination_url;
+    }
+
+    }
+    //@Author: Satish parmar end Code

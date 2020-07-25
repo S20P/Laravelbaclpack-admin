@@ -34,16 +34,19 @@ class Messanger extends Model
         $callback_value ="";
         $Result = $this->MessangerDetails();
         if($Result){
-           $callback_value = $Result->supplier_name;
+           $url_profile_details = backpack_url('supplier/').'?profile_id='.base64_encode($Result->supplier_id);
+           $callback_value = '<a href='.$url_profile_details.' target="_blank">'.$Result->supplier_name.'</a>';
         }
         return $callback_value;
-      }
+       }
 
       public function customer_name() {
         $callback_value ="";
         $Result = $this->MessangerDetails();
         if($Result){
-           $callback_value = $Result->customer_name;
+           //$callback_value = $Result->customer_name;
+           $url_profile_details = backpack_url('customer/').'?profile_id='.base64_encode($Result->customer_id);
+           $callback_value = '<a href='.$url_profile_details.' target="_blank">'.$Result->customer_name.'</a>';
         }
         return $callback_value;
       }
@@ -77,7 +80,7 @@ class Messanger extends Model
         ->join('customer_profile', 'customers_inquiry.customer_id', '=', 'customer_profile.id') 
         ->where('customers_inquiry.supplier_services_id',$this->supplier_services_id)
         ->where('customers_inquiry.customer_id',$this->customer_id)
-        ->select('supplier_profile.name as supplier_name','customer_profile.name as customer_name','services.name as service_name','customers_inquiry.*')
+        ->select('supplier_profile.id as supplier_id','supplier_profile.name as supplier_name','customer_profile.id as customer_id','customer_profile.name as customer_name','services.name as service_name','customers_inquiry.*')
         ->distinct('customers_inquiry.customer_id')
         ->first();    
 

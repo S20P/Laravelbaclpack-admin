@@ -623,6 +623,8 @@ class ComposerStaticInit4dacb6d424736f2fd18d4679eff38054
     );
 
     public static $classMap = array (
+        'AddReorderToServicesTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_21_102807_add_reorder_to_services_table.php',
+        'AddReorderToSupplierProfileTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_21_113356_add_reorder_to_supplier_profile_table.php',
         'AddSocialSupplierProfileTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_21_073203_add_social_supplier_profile_table.php',
         'AddSocialTitleSupplierProfileTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_21_085558_add_social_title_supplier_profile_table.php',
         'ClientTestimonialTableSeeder' => __DIR__ . '/../..' . '/database/seeds/ClientTestimonialTableSeeder.php',

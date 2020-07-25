@@ -5,21 +5,21 @@
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/custom.js') }}"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-<script src="https://www.jqueryscript.net/demo/jQuery-Plugin-For-Interactive-Multi-layer-Parallax-Effect-Parallaxmouse/dist/jquery.parallaxmouse.min.js"></script>
+<script defer src="https://www.jqueryscript.net/demo/jQuery-Plugin-For-Interactive-Multi-layer-Parallax-Effect-Parallaxmouse/dist/jquery.parallaxmouse.min.js"></script>
 {{--<script src="https://cdnjs.cloudflare.com/ajax/libs/tilt.js/1.2.1/tilt.jquery.js"></script>--}}
 {{--<script>--}}
 {{--    $('.client-item').tilt({--}}
 {{--        scale:1.1,--}}
 {{--    });--}}
 {{--</script>--}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
 @yield('page_plugin_script')
 
 <!-- <script src="{{ asset('js/jquery.nice-select.js') }}"></script> -->
-<script src="{{ asset('js/wow.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
-<script src="{{ asset('js/jquery.toast.js') }}"></script>
+<script defer  src="{{ asset('js/wow.js') }}"></script>
+<script defer  src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
+<script defer  src="{{ asset('js/jquery.toast.js') }}"></script>
 
 
 <script type="text/javascript">
@@ -30,20 +30,24 @@
 
     </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.js"></script>
+<script defer  src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.js"></script>
 
 
 
-<script src="{{asset('js/select2.js')}}"></script>
-<script src="{{asset('js/dashbord_accordion.js')}}"></script>
-<script src="{{ asset('js/custom.js') }}"></script>
-<script src="{{ asset('js/customFroentendValidation.js') }}"></script>
-<script src="{{ asset('js/customAnalytics.js') }}"></script>
+<script defer src="{{asset('js/select2.js')}}"></script>
+<script defer src="{{asset('js/dashbord_accordion.js')}}"></script>
+<script defer src="{{ asset('js/custom.js') }}"></script>
+<script defer src="{{ asset('js/customFroentendValidation.js') }}"></script>
+<script defer src="{{ asset('js/customAnalytics.js') }}"></script>
 {{--<script src="{{ asset('js/jquery.parallaxmouse.min.js') }}"></script>--}}
 {{--<script src="{{ asset('js/parallax.min.js') }}"></script>--}}
 
 
 <script>
+
+
+console.log("Current-url",window.location.href);
+
 
 $(document).keyup(function(e) {
      if (e.keyCode == 27) { // escape key maps to keycode `27`
@@ -612,10 +616,10 @@ $(document).keyup(function(e) {
     gapi.load('auth2', function(){
       // Retrieve the singleton for the GoogleAuth library and set up the client.
       auth2 = gapi.auth2.init({
-       client_id: '352586411911-6ef4p7k6vg98408cchamfau1um14hk3s.apps.googleusercontent.com', //partyperfect-live
-      // client_id: '352586411911-5hmseifiepmjmo4equt2bq1i10gdfqnc.apps.googleusercontent.com',  //localhost-party-perfect
-      cookiepolicy: 'single_host_origin',
-      
+       //client_id: '352586411911-6ef4p7k6vg98408cchamfau1um14hk3s.apps.googleusercontent.com', //partyperfect-live
+       client_id: '352586411911-5hmseifiepmjmo4equt2bq1i10gdfqnc.apps.googleusercontent.com',  //localhost-party-perfect
+       cookiepolicy: 'single_host_origin',
+       
         // Request scopes in addition to 'profile' and 'email'
         //scope: 'additional_scope'
       });
@@ -644,7 +648,7 @@ $(document).keyup(function(e) {
                     url  : url,
                     data : {'name': name, 'email' : email},
                     success : function(data){
-                       
+                       console.log("google-Data",data);
                         if(data.success == true){
                             if(data.approved == true){
                                  window.onbeforeunload = function(e){
@@ -717,6 +721,9 @@ $(document).keyup(function(e) {
 
     // Check whether the user already logged in
     FB.getLoginStatus(function(response) {
+
+console.log("response",response);
+
         if (response.status === 'connected') {
             //display user data
            // getFbUserData();
@@ -738,6 +745,7 @@ function fbLogin() {
     fbInit();
 
     FB.login(function (response) {
+        console.log("Fb-data",response);
         if (response.authResponse) {
             // Get and display the user profile data
             getFbUserData();
@@ -752,6 +760,9 @@ function getFbUserData(){
    
     FB.api('/me', {locale: 'en_US', fields: 'id,first_name,last_name,email,link,gender,locale,picture'},
     function (response) {
+        console.log("FB-res",response);
+
+     
         var name  = response.first_name+" "+response.last_name;
         var email  = response.email;
         var url = "{{ route('sociallogins')}}";
@@ -805,12 +816,10 @@ function getFbUserData(){
                             $('.error_login_facebook').append('<div class="alert alert-danger success_fade3" role="alert">'+data.message+'</div>');
                               setTimeout(function(){  $('.success_fade3').fadeOut(); }, 6000);
                         }
-                             
-                        }
+                      
                         return false;
-
-                    }
-                });
+                     }
+                    });
          }else{
              $.toast({
                     heading: 'Error',

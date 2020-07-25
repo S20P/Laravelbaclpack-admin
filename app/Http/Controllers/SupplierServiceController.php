@@ -167,11 +167,17 @@ class SupplierServiceController extends Controller
                       {
                           $file = $request->file('image');
                       
-                              $path = $file->getClientOriginalName();
-                              $name = time()."_".$path;
-                              $destinationPath = public_path('/uploads/SupplierDetailsSlider/');
-                              $images_url = '/uploads/SupplierDetailsSlider/'.$name;
-                              $file->move($destinationPath,$name);
+                              //$path = $file->getClientOriginalName();
+                              // $name = time()."_".$path;
+                              // $destinationPath = public_path('/uploads/SupplierDetailsSlider/');
+                              // $images_url = '/uploads/SupplierDetailsSlider/'.$name;
+                              // $file->move($destinationPath,$name);
+                              $destination_path = "/uploads/SupplierDetailsSlider";
+                              $upload_imagename = md5($file->getClientOriginalName().random_int(1, 9999).time()).'.'.$file->getClientOriginalExtension();
+                              $upload_url = public_path($destination_path).'/'.$upload_imagename;
+                              $filename = compress_image($_FILES["image"]["tmp_name"], $upload_url, 40);
+                              $file_path = $destination_path.'/'.$upload_imagename;
+                              $images_url = $file_path;
                     
                           SupplierDetailsSlider::Insert(
                               ['supplier_services_id'=>$id,'heading'=>$heading,'content'=>$content,'image'=>$images_url]);

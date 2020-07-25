@@ -85,14 +85,14 @@ if(data.booking.length>0){
     // }
     bookingdata += '<tr id="booking_id_' + data.booking[i].id + '"><td>' + data.booking[i].book_date + '</td><td>' + data.booking[i].service_name + '</td><td>' + data.booking[i].event_name +'</td><td>' + data.symbol + data.booking[i].amount + '</td><td>' + data.booking[i].customer_name+ '</td><td>' + data.booking[i].event_address + '</td><td>' + status + '</td>';
      if(data.booking[i].booking_status != 1){
-        bookingdata += '<td colspan="2"><a href="javascript:void(0)" id="send_booking_confirmation_mail" class="btn btn-sm btn-link" data-id="' + data.booking[i].id + '"> <i class="fa fa-paper-plane-o"></i>Resend Confirmation Email</a></td>';
-        bookingdata += '<td colspan="2"><a href="'+APP_URL+'/invoice/'+data.booking[i].encoded_id+'" target="_blank"  class="btn btn-sm btn-link"> <i class="fa fa-paper-plane-o"></i>View invoice</a></td>';
-        bookingdata += '<td colspan="2"><a href="javascript:void(0)"  id="invoice_download" data-id="' + data.booking[i].id + '" class="btn btn-sm btn-link"> <i class="fa fa-download"></i>Download invoice</a></td>';
-    	bookingdata += '<td colspan="2"><a href="javascript:void(0)" id="edit_booking" data-id="' + data.booking[i].id + '" class="btn common-btn"> <i class="fal fa-edit"></i></a></td>';
+        bookingdata += '<td colspan="2"><a href="javascript:void(0)" id="send_booking_confirmation_mail" class="btn common-btn" data-id="' + data.booking[i].id + '" data-toggle="tooltip" title="Resend Confirmation Email"> <i class="fa fa-envelope"></i></a></td>';
+        bookingdata += '<td colspan="2"><a href="'+APP_URL+'/invoice/'+data.booking[i].encoded_id+'" target="_blank"  class="btn common-btn" data-toggle="tooltip" title="View Invoice"> <i class="fa fa-eye"></i></a></td>';
+        bookingdata += '<td colspan="2"><a href="javascript:void(0)"  id="invoice_download" data-id="' + data.booking[i].id + '" class="btn common-btn" data-toggle="tooltip" title="Download Invoice"> <i class="fa fa-download"></i></a></td>';
+    	bookingdata += '<td colspan="2"><a href="javascript:void(0)" id="edit_booking" data-id="' + data.booking[i].id + '" class="btn common-btn" data-toggle="tooltip" title="Edit"> <i class="fal fa-edit"></i></a></td>';
     } else {
     	bookingdata += '<td colspan="2"> --- </td>';
     }
-    bookingdata += '<td colspan="2"><a href="javascript:void(0)" id="delete_booking" data-id="' + data.booking[i].id + '" class="btn common-btn"><i class="fal fa-trash"></i></a></td></tr>';
+    bookingdata += '<td colspan="2"><a href="javascript:void(0)" id="delete_booking" data-id="' + data.booking[i].id + '" class="btn common-btn" data-toggle="tooltip" title="Delete"><i class="fal fa-trash"></i></a></td></tr>';
     // if(action=="update"){
     //   $("#booking_id_" + data[i].id).replaceWith(bookingdata);
     //   return false;
@@ -118,7 +118,7 @@ function getCustomerWishlist(e = null) {
     var r = $(".customer_id").val();
     $.ajax({
         type: "get",
-        url: APP_URL + "/get_wishlist_account",
+        url: APP_URL + "/get-wishlist-account",
         data: {
             customer_id: r
         },
@@ -175,12 +175,10 @@ function getCustomerBooking(action=null) {
     //    status = "Pending";
     // }
     status = data.booking[i].booking_status;
-
        bookingdata += '<tr id="booking_id_' + data.booking[i].id + '"><td>' + data.booking[i].book_date + '</td><td>' + data.booking[i].service_name + '</td><td>' + data.booking[i].event_name +'</td><td>' + data.symbol + data.booking[i].amount + '</td><td>' + data.booking[i].business_name+ '</td><td>' + data.booking[i].event_address + '</td><td>' + status + '</td>';
-       bookingdata += '<td colspan="2"><a href="'+APP_URL+'/invoice/'+data.booking[i].encoded_id+'" target="_blank" class="btn btn-sm btn-link"> <i class="fa fa-paper-plane-o"></i>View invoice</a></td>';
-       bookingdata += '<td colspan="2"><a href="javascript:void(0)"  id="invoice_download" data-id="' + data.booking[i].id + '" class="btn btn-sm btn-link"> <i class="fa fa-download"></i>Download invoice</a></td>';
-       bookingdata += '<td><a href="javascript:void(0)" id="delete_booking" data-id="' + data.booking[i].id + '" class="btn common-btn"><i class="fal fa-trash"></i></a></td></tr>';
-      
+       bookingdata += '<td colspan="2"><a href="'+APP_URL+'/invoice/'+data.booking[i].encoded_id+'" target="_blank"  class="btn common-btn" data-toggle="tooltip" title="View Invoice"> <i class="fa fa-eye"></i></a></td>';
+       bookingdata += '<td colspan="2"><a href="javascript:void(0)"  id="invoice_download" data-id="' + data.booking[i].id + '" class="btn common-btn" data-toggle="tooltip" title="Download Invoice"> <i class="fa fa-download"></i></a></td>';
+       bookingdata += '<td><a href="javascript:void(0)" id="delete_booking" data-id="' + data.booking[i].id + '" class="btn common-btn" data-toggle="tooltip" title="Delete"><i class="fal fa-trash"></i></a></td></tr>';
     }
     if(action=="update"){
       $("#booking_id_" + data.booking[i].id).replaceWith(bookingdata);
@@ -196,7 +194,7 @@ function getCustomerBooking(action=null) {
   error: function (data) {
 
   }
-})
+});
 }
 
 function getSupplierServices(e = null) {

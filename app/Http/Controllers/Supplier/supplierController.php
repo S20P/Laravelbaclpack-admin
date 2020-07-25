@@ -419,14 +419,24 @@ class supplierController extends Controller
             $user_id = $this->getUserID();
                  
             if($request->file('image')){
-            $image = $request->file('image');
-            $imagename = time().'.'.$image->getClientOriginalExtension();
-            $destinationPath = public_path('/uploads/Supplier/');
-            $image->move($destinationPath, $imagename);
+            // $image = $request->file('image');
+            // $imagename = time().'.'.$image->getClientOriginalExtension();
+            // $destinationPath = public_path('/uploads/Supplier/');
+            // $image->move($destinationPath, $imagename);
+
+            $file = $request->file('image');
+            $destination_path = "/uploads/Supplier";
+            $upload_imagename = md5($file->getClientOriginalName().random_int(1, 9999).time()).'.'.$file->getClientOriginalExtension();
+            $upload_url = public_path($destination_path).'/'.$upload_imagename;
+            $filename = compress_image($_FILES["image"]["tmp_name"], $upload_url, 40);
+            $file_path = $destination_path.'/'.$upload_imagename;
+            $images_url = $file_path;
+
+
 
             $supplier = Supplier::where('id',$user_id)
             ->update([
-                'image' => "/uploads/Supplier/".$imagename,
+                'image' => $images_url,
               ]); 
 
               //Session::flash('success', "Your Profile  Successfully Updated.");
@@ -712,12 +722,6 @@ class supplierController extends Controller
                }
                 return Response::json(["error"=>"Supplier service Added failed."]);
         }
-
-
-
-
-
-
 
 }
 

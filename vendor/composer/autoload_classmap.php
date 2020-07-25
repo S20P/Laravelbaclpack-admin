@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddReorderToServicesTable' => $baseDir . '/database/migrations/2020_07_21_102807_add_reorder_to_services_table.php',
+    'AddReorderToSupplierProfileTable' => $baseDir . '/database/migrations/2020_07_21_113356_add_reorder_to_supplier_profile_table.php',
     'AddSocialSupplierProfileTable' => $baseDir . '/database/migrations/2020_02_21_073203_add_social_supplier_profile_table.php',
     'AddSocialTitleSupplierProfileTable' => $baseDir . '/database/migrations/2020_02_21_085558_add_social_title_supplier_profile_table.php',
     'ClientTestimonialTableSeeder' => $baseDir . '/database/seeds/ClientTestimonialTableSeeder.php',

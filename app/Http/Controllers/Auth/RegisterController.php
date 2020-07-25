@@ -115,7 +115,7 @@ class RegisterController extends Controller
             'name' => 'required',
             'email' =>  ['required', 'string', 'email', 'max:255','unique:supplier_profile'],
             'phone' => ['required', 'numeric'],
-            'image' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'service_name' => 'required',
             'business_name' => 'required',
@@ -140,7 +140,7 @@ class RegisterController extends Controller
         'password' => Hash::make($request['password']),
         'password_string' => $request['password'],
         'phone' => $request['phone'],
-        'image' => '/images/avtar.png',      
+        'image' => 'images/avtar.png',      
         'service_name' => $request['service_name'],
         'business_name' => $request['business_name'],
         'category' => $request['category'],
@@ -150,15 +150,24 @@ class RegisterController extends Controller
         'pricing_category' => $request['pricing_category'],
        ]);
 
-       $image = $request->file('image');
-       $imagename = time().'.'.$image->getClientOriginalExtension();
-       $destinationPath = public_path('/uploads/Supplier/');
-       $image->move($destinationPath, $imagename);
+    //    $image = $request->file('image');
+    //    $imagename = time().'.'.$image->getClientOriginalExtension();
+    //    $destinationPath = public_path('/uploads/Supplier/');
+    //    $image->move($destinationPath, $imagename);
+
+       $file = $request->file('image');
+       $destination_path = "uploads/Supplier";
+       $upload_imagename = md5($file->getClientOriginalName().random_int(1, 9999).time()).'.'.$file->getClientOriginalExtension();
+       $upload_url = public_path($destination_path).'/'.$upload_imagename;
+       $filename = compress_image($_FILES["image"]["tmp_name"], $upload_url, 40);
+       $file_path = $destination_path.'/'.$upload_imagename;
+       $images_url = $file_path;
+
         
        $insertedsupplierID = $supplier->id;
        $supplier = Supplier::where('id',$insertedsupplierID)
         ->update([
-            'image' => "/uploads/Supplier/".$imagename,
+            'image' => $$images_url,
           ]);   
         
        $name = $request['name'];
@@ -188,9 +197,6 @@ class RegisterController extends Controller
                     send_mail_dynamic($to_mail,$to_name,$template,$view_params);
 
                 /* @author:Satish Parmar EndCode */
-     
-
-
         }
         
         Session::flash('success', "Thank you! Please check your email for next steps.");
@@ -219,7 +225,7 @@ class RegisterController extends Controller
             'email' =>  ['required', 'string', 'email', 'max:255','unique:customer_profile'],
             'phone' => ['required', 'numeric'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
-            'image' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], $messages);
 
         if ($validator->fails()) {
@@ -235,19 +241,29 @@ class RegisterController extends Controller
             'phone' => $request['phone'],
             'password_string' => $request['password'],
             'password' => Hash::make($request['password']),
-            'image' => '/images/avtar.png', 
+            'image' => 'images/avtar.png', 
            ]);
 
-           $image = $request->file('image');
-           $imagename = time().'.'.$image->getClientOriginalExtension();
-           $destinationPath = public_path('/uploads/Customer/');
-           $image->move($destinationPath, $imagename);
+        //    $image = $request->file('image');
+        //    $imagename = time().'.'.$image->getClientOriginalExtension();
+        //    $destinationPath = public_path('/uploads/Customer/');
+        //    $image->move($destinationPath, $imagename);
+
+
+           $file = $request->file('image');
+           $destination_path = "uploads/Customer";
+           $upload_imagename = md5($file->getClientOriginalName().random_int(1, 9999).time()).'.'.$file->getClientOriginalExtension();
+           $upload_url = public_path($destination_path).'/'.$upload_imagename;
+           $filename = compress_image($_FILES["image"]["tmp_name"], $upload_url, 40);
+           $file_path = $destination_path.'/'.$upload_imagename;
+           $images_url = $file_path;
+
     
            $insertedCustomerID =  $Customer->id;
 
            $supplier = Customer::where('id',$insertedCustomerID)
             ->update([
-                'image' => "/uploads/Customer/".$imagename,
+                'image' => $images_url,
               ]);  
 
            $name = $request['name'];
@@ -313,7 +329,7 @@ class RegisterController extends Controller
                     'password_string' => $request['password'],
                     'password' => Hash::make($request['password']),
                    // "status"=>'Approved',
-                    'image' => '/images/avtar.png', 
+                    'image' => 'images/avtar.png', 
                    ]);
                  
                    $data = array(

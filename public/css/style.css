@@ -2515,7 +2515,8 @@ a.obl-heart-btn i {
 	margin-right:20px
 }
 .obl-bottom .olb-ratings {
-	margin-left:auto
+	margin-left:auto;
+	padding-right: 15px;
 }
 .gradient-rating li {
 	display:inline-block
@@ -5278,3 +5279,11 @@ position: unset;
 	padding-left: 15px;
 }
 .business-profile h2{margin-bottom: 0;}
+
+
+.our-block-list-content ul{
+	margin: 0 -15px;
+}
+ul.obl-nav li{padding: 0 11px;}
+
+ul.obl-nav li a{padding: 0;}		

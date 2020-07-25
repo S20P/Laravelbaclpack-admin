@@ -105,9 +105,10 @@ $services =  DB::table('supplier_services')
          $user =$this->getUserDetails();
         $user_id = $this->getUserID();
         $getinquiry =  DB::table('customers_inquiry')
-                            ->join('supplier_profile', 'customers_inquiry.supplier_id', '=', 'supplier_profile.id')
-                            ->join('supplier_categories_events', 'customers_inquiry.event_id', '=', 'supplier_categories_events.id')
-                            ->select('supplier_categories_events.name','customers_inquiry.updated_at','supplier_profile.business_name','customers_inquiry.message')
+                           ->join('supplier_services', 'supplier_services.id', '=', 'customers_inquiry.supplier_services_id')
+                           ->join('supplier_assign_events', 'supplier_services.id', '=', 'supplier_assign_events.supplier_services_id')                                        
+                           ->join('events', 'supplier_assign_events.event_id', '=', 'events.id')
+                            ->select('events.name','customers_inquiry.updated_at','supplier_services.business_name','customers_inquiry.message')
                             ->where('customer_id',$user_id)->groupBy('supplier_id')->get()->toArray();
 
             return view('customer.wishlist')->with(["user_details" => $user]);
@@ -205,14 +206,23 @@ $services =  DB::table('supplier_services')
         $user_id = $this->getUserID();
                  
             if($request->file('image')){
-            $image = $request->file('image');
-            $imagename = time().'.'.$image->getClientOriginalExtension();
-            $destinationPath = public_path('/uploads/Customer/');
-            $image->move($destinationPath, $imagename);
+            // $image = $request->file('image');
+            // $imagename = time().'.'.$image->getClientOriginalExtension();
+            // $destinationPath = public_path('/uploads/Customer/');
+            // $image->move($destinationPath, $imagename);
+
+            $file = $request->file('image');
+            $destination_path = "/uploads/Customer";
+            $upload_imagename = md5($file->getClientOriginalName().random_int(1, 9999).time()).'.'.$file->getClientOriginalExtension();
+            $upload_url = public_path($destination_path).'/'.$upload_imagename;
+            $filename = compress_image($_FILES["image"]["tmp_name"], $upload_url, 40);
+            $file_path = $destination_path.'/'.$upload_imagename;
+            $images_url = $file_path;
+
 
             $Customer = Customer::where('id',$user_id)
             ->update([
-                'image' => "/uploads/Customer/".$imagename,
+                'image' => $images_url,
               ]); 
             return redirect()->back();
             }

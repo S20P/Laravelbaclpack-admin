@@ -61,7 +61,8 @@
             <div class="filter_search">
                 <div class="search-box">
                     <form id="filter-form" class="filter-form" action="{{route('OurSuppliers')}}" method="post">
-                        @csrf
+                        @csrf 
+                        {{ csrf_field() }}
                        <!--  <div class="search-field-custom"><input type="text" name="service_name"
                                                                 placeholder="TYPE OF EVENT (eg: wedding)"></div> -->
 

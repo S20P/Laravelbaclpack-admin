@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Support\Facades\Redirect;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,6 +43,11 @@
     Route::get('/customer-feed','HomeController@getFeed')->name('InstaFeed');
     Route::get('/supplier-terms-and-conditions', 'HomeController@supplierTakeAndCare')->name('SupplierTackandCare');
     Route::post('/supplier_price_tires','HomeController@selectPriceRange')->name('Price_Tires');
+
+    Route::get('/supplier-tack-and-care', function () {
+        return redirect()->route('SupplierTackandCare');
+    });
+
 
     //login
     Route::post('/login', 'Auth\LoginController@ProfileLogin')->name('profile.login');
@@ -112,7 +117,7 @@
         Route::post('/profile', 'Customer\customerController@profile_edit')->name('customer.profile');
         Route::post('/customer_inquiry','Customer\customerController@sendInquiry')->name('customer.inquiry');
         Route::post('/supplier_review','Customer\customerController@putSupplierReviews')->name('customer.review');
-        Route::post('/customer_wishlist','Customer\customerController@addToWishlist')->name('customer.wishlist');
+        Route::post('/customer_wishlist','Customer\customerController@addToWishlist')->name('customer.wishlist-post');
         Route::post('/customer_wishlist_remove','Customer\customerController@removeToWishlist')->name('customer.wishlistRemove');
         Route::get('/customer-wishlist','Customer\customerController@wishlist')->name('customer.wishlist');
         Route::post('/customer_addreply','Customer\customerController@addToreply')->name('customer.addreply');
@@ -141,6 +146,9 @@
         $pages_class = str_replace(".","_",$view->getName());
         View::share('view_name', $pages_class);
     }); 
+
+    Route::get('validate-coupon-stripe/{coupon_code?}', 'MoneySetupController@ValidateCouponStripe')->name('validate-coupon');
+
     Route::get('addmoney/stripe', 'MoneySetupController@PaymentStripe');
     Route::post('payform/stripe','MoneySetupController@postPaymentStripe');
     Route::any('cancel_subscription', 'MoneySetupController@cancelSubscription');

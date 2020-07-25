@@ -57,6 +57,7 @@ class MessangerCrudController extends CrudController
                 'type'      => 'model_function',
                 'entity'    => 'SupplierSrvices', // the method that defines the relationship in your Model
                 'function_name' => 'supplier_name', // foreign key model
+                'limit' => 1000,
                 'searchLogic' => function ( $query, $column, $searchTerm ) {
                       $this->crud->addClause('join', 'supplier_services', function($query) use($searchTerm) {  
                          // join with function
@@ -73,6 +74,7 @@ class MessangerCrudController extends CrudController
                 'type'      => 'model_function',
                 'entity'    => 'SupplierSrvices', // the method that defines the relationship in your Model
                 'function_name' => 'customer_name', // foreign key model
+                'limit' => 1000,
                 
             ],
                [

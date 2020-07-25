@@ -29,7 +29,8 @@ class SupplierUpdateRequest extends FormRequest
             'email' =>  ['required', 'string', 'email'],
             'password' => 'confirmed',
             'phone' => ['required', 'numeric'],
-            'image' => ['mimes:jpeg,jpg,png,gif'],
+             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            
             // 'account_holder_name' => 'required',
             // 'account_number' => 'required',
             // 'ifsc' => 'required',

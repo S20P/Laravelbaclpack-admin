@@ -38,6 +38,7 @@ class SupplierCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation { destroy as traitDestroy; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ReorderOperation;
 
 
     public function setup()
@@ -45,14 +46,13 @@ class SupplierCrudController extends CrudController
         $this->crud->setModel('App\Models\Supplier');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/supplier');
         $this->crud->setEntityNameStrings('supplier', 'suppliers');
+        $this->crud->enableReorder('name', 0);
       
     }
 
     public function getUserID(){
        return Auth::guard('backpack')->user()->id;
     }
-
-  
 
     protected function setupListOperation()
     {
@@ -86,7 +86,16 @@ class SupplierCrudController extends CrudController
         //     'limit'=> 1000,
         // ],
        ]);
-    
+
+      // $this->crud->addClause('where', 'id', '=', $booking_id);
+       
+     // http://localhost:8000/admin/supplier?profile_id=1
+      if(isset($this->crud->request->profile_id) && !empty($this->crud->request->profile_id)) {
+        $profile_id = $this->crud->request->profile_id;
+       $this->crud->addClause('where', 'id', '=', base64_decode($profile_id));
+     }
+     
+        $this->crud->orderBy('lft');
 
       //  $this->crud->setFromDb();
         $this->crud->removeColumn('user_id');
@@ -97,38 +106,40 @@ class SupplierCrudController extends CrudController
 
 
    public function show($id)
-{
+    {
 
-     // get the info for that entry
-    $this->data['entry'] = $this->crud->getEntry($id);
-    $this->data['crud'] = $this->crud;
-    $this->data['title'] = 'Moderate '.$this->crud->entity_name;
-     
-$supplier =  DB::table("supplier_profile")->where('id',$id)->first();
+        // get the info for that entry
+        $this->data['entry'] = $this->crud->getEntry($id);
+        $this->data['crud'] = $this->crud;
+        $this->data['title'] = 'Moderate '.$this->crud->entity_name;
+        
+    $supplier =  DB::table("supplier_profile")->where('id',$id)->first();
 
- $supplier_services = DB::table("supplier_services")
-->join('services', 'services.id', '=', 'supplier_services.service_id')
-->where('supplier_services.supplier_id',$id)
-->select('supplier_services.*','services.name as service_name')
-->get()->toArray();
+    $supplier_services = DB::table("supplier_services")
+        ->join('services', 'services.id', '=', 'supplier_services.service_id')
+        ->where('supplier_services.supplier_id',$id)
+        ->select('supplier_services.*','services.name as service_name')
+        ->get()->toArray();
 
- $supplier_payment_info = DB::table("payment_transfer_info_supplier")->where('supplier_id',$id)->first();
-
-
-     $this->data['supplier'] = $supplier;
-     $this->data['supplier_services'] = $supplier_services;
-     $this->data['supplier_payment_info'] = $supplier_payment_info;
+    $supplier_payment_info = DB::table("payment_transfer_info_supplier")->where('supplier_id',$id)->first();
 
 
+        $this->data['supplier'] = $supplier;
+        $this->data['supplier_services'] = $supplier_services;
+        $this->data['supplier_payment_info'] = $supplier_payment_info;
 
-    //     // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
-     return view('crud::details_row.supplier', $this->data);
-  
-}
+
+
+        //     // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
+        return view('crud::details_row.supplier', $this->data);
+    
+    }
     
 
     protected function setupCreateOperation()
     {
+
+      
    
         $this->crud->setTitle('Add a new supplier');
         $this->crud->setHeading('Add a new supplier');
@@ -431,9 +442,14 @@ $supplier =  DB::table("supplier_profile")->where('id',$id)->first();
             'default'    =>  $user_id, 
         ]);
        
+   
         $this->crud->setValidation(SupplierRequest::class);     
        $this->crud->setFromDb();  
        $this->crud->removeField('password_string');
+       $this->crud->removeField('parent_id');
+       $this->crud->removeField('lft');
+       $this->crud->removeField('rgt');
+       $this->crud->removeField('depth');
 
     }
 
@@ -634,6 +650,9 @@ $supplier =  DB::table("supplier_profile")->where('id',$id)->first();
 
     protected function setupUpdateOperation()
     {
+
+     
+
          $this->crud->addField([
             'name'           => 'name',
             'type'           => 'text',
@@ -762,7 +781,7 @@ $this->crud->addField([
 
 
 $this->crud->addField([
-    'name'           => 'password_new',
+    'name'           => 'password',
     'type'           => 'password',
     'label'          => 'Password',
      'fake' => true,
@@ -784,7 +803,11 @@ $this->crud->addField([
           // $this->crud->setFromDb();
        $this->crud->removeField('user_id');
        $this->crud->removeField('password_string');
-       $this->crud->removeField('password');
+       $this->crud->removeField('parent_id');
+       $this->crud->removeField('lft');
+       $this->crud->removeField('rgt');
+       $this->crud->removeField('depth');
+    //    $this->crud->removeField('password');
 
     }
 
@@ -829,7 +852,7 @@ $this->crud->addField([
           
      
         // Reset Password by admin
-        $password = $Result->password_new;
+        $password = $Result->password;
 
         if($password && !empty($password) && $password !== "" && $password !== null){
             

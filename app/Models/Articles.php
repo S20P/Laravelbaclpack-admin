@@ -83,43 +83,83 @@ class Articles extends Model
 
  public function setColumn1ImageAttribute($value)
     {
+        // $attribute_name = "column1_image";
+        // $disk = "public";
+        // $destination_path = "uploads/Articles";
+
+        // $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
+
         $attribute_name = "column1_image";
         $disk = "public";
         $destination_path = "uploads/Articles";
+        $upload_imagename = md5($value->getClientOriginalName().random_int(1, 9999).time()).'.'.$value->getClientOriginalExtension();
+        $upload_url = public_path($destination_path).'/'.$upload_imagename;
+        $filename = compress_image($_FILES["column1_image"]["tmp_name"], $upload_url, 40);
+        $file_path = $destination_path.'/'.$upload_imagename;
+        $this->attributes[$attribute_name] = $file_path;
 
-        $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
 
     // return $this->attributes[{$attribute_name}]; // uncomment if this is a translatable field
     }
 
      public function setColumn2ImageAttribute($value)
     {
+
         $attribute_name = "column2_image";
         $disk = "public";
         $destination_path = "uploads/Articles";
+        $upload_imagename = md5($value->getClientOriginalName().random_int(1, 9999).time()).'.'.$value->getClientOriginalExtension();
+        $upload_url = public_path($destination_path).'/'.$upload_imagename;
+        $filename = compress_image($_FILES["column2_image"]["tmp_name"], $upload_url, 40);
+        $file_path = $destination_path.'/'.$upload_imagename;
+        $this->attributes[$attribute_name] = $file_path;
 
-        $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
+        // $attribute_name = "column2_image";
+        // $disk = "public";
+        // $destination_path = "uploads/Articles";
+
+        // $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
 
     // return $this->attributes[{$attribute_name}]; // uncomment if this is a translatable field
     }
     public function setImageAttribute($value)
     {
+
         $attribute_name = "image";
         $disk = "public";
         $destination_path = "uploads/Articles";
+        $upload_imagename = md5($value->getClientOriginalName().random_int(1, 9999).time()).'.'.$value->getClientOriginalExtension();
+        $upload_url = public_path($destination_path).'/'.$upload_imagename;
+        $filename = compress_image($_FILES["image"]["tmp_name"], $upload_url, 40);
+        $file_path = $destination_path.'/'.$upload_imagename;
+        $this->attributes[$attribute_name] = $file_path;
+        // $attribute_name = "image";
+        // $disk = "public";
+        // $destination_path = "uploads/Articles";
 
-        $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
+        // $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
 
     // return $this->attributes[{$attribute_name}]; // uncomment if this is a translatable field
     }
 
     public function setBannerImageAttribute($value)
     {
+
+
         $attribute_name = "banner_image";
         $disk = "public";
         $destination_path = "uploads/Articles";
+        $upload_imagename = md5($value->getClientOriginalName().random_int(1, 9999).time()).'.'.$value->getClientOriginalExtension();
+        $upload_url = public_path($destination_path).'/'.$upload_imagename;
+        $filename = compress_image($_FILES["banner_image"]["tmp_name"], $upload_url, 40);
+        $file_path = $destination_path.'/'.$upload_imagename;
+        $this->attributes[$attribute_name] = $file_path;
 
-        $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
+        // $attribute_name = "banner_image";
+        // $disk = "public";
+        // $destination_path = "uploads/Articles";
+
+        // $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
 
     // return $this->attributes[{$attribute_name}]; // uncomment if this is a translatable field
     }
@@ -129,7 +169,7 @@ class Articles extends Model
     {
         $attribute_name = "video";
         $disk = "public";
-        $destination_path = "uploads/Articles";
+        $destination_path = "/uploads/Articles";
 
         $this->uploadFileToDisk($value, $attribute_name, $disk, $destination_path);
 

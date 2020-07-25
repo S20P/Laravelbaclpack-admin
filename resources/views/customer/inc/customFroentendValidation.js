@@ -1264,7 +1264,7 @@ function getCustomerWishlist(action=null) {
 
   $.ajax({
     type: "get",
-    url: APP_URL + '/get_wishlist_account',
+    url: APP_URL + '/get-wishlist-account',
     data :{
       "customer_id":customer_id
     },

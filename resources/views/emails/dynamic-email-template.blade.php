@@ -113,7 +113,7 @@
                                                                             <td align="center">
                                                                                 <p style="font-size: 12px;">
                                                                                     <a
-                                                                                        href="{{base_url}}/supplier-tack-and-care">SUPPLIER
+                                                                                        href="{{base_url}}/supplier-terms-and-conditions">SUPPLIER
                                                                                         T&amp;C</a>|
                                                                                     <a
                                                                                         href="{{base_url}}/help">HELP</a>|
